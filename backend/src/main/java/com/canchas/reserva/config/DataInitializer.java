@@ -64,7 +64,7 @@ public class DataInitializer implements CommandLineRunner {
                 BigDecimal.valueOf(60000.00),
                 false,
                 "Cancha reglamentaria en polvo de ladrillo (arcilla roja), drenaje rápido y gradería lateral.",
-                "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?w=800&auto=format&fit=crop"
+                "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&auto=format&fit=crop"
             );
             tenis = escenarioRepository.save(tenis);
             crearFranjasEstandar(tenis, 6, 20);
@@ -78,7 +78,7 @@ public class DataInitializer implements CommandLineRunner {
                 BigDecimal.valueOf(70000.00),
                 false,
                 "Pista de pádel con cerramiento de vidrio templado panorámico y césped monofilamento azul.",
-                "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800&auto=format&fit=crop"
+                "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=800&auto=format&fit=crop"
             );
             padel = escenarioRepository.save(padel);
             crearFranjasEstandar(padel, 7, 22);

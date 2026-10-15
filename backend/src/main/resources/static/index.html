@@ -47,8 +47,18 @@
                     <i class="fa-solid fa-user-plus"></i> Registrarse
                 </button>
             </div>
-        </div>
     </header>
+
+    <!-- Barra de Estado Exclusiva del Administrador -->
+    <div id="admin-indicator-bar" class="admin-top-bar" style="display: none;">
+        <div class="admin-bar-content">
+            <span class="admin-badge"><i class="fa-solid fa-crown"></i> MODO ADMINISTRADOR COMPLEJO DEPORTIVO</span>
+            <span class="admin-desc">Tienes control total sobre escenarios, mantenimiento y monitor de reservas globales.</span>
+            <button class="btn btn-sm btn-outline" style="background: rgba(255,255,255,0.15); color:white; border-color: rgba(255,255,255,0.3);" onclick="app.showSection('admin')">
+                <i class="fa-solid fa-chart-line"></i> Abrir Panel de Control Admin
+            </button>
+        </div>
+    </div>
 
     <!-- Notificaciones Toast -->
     <div id="toast-container" class="toast-container"></div>
@@ -212,33 +222,106 @@
             <div class="section-container">
                 <div class="section-header">
                     <div>
-                        <h2>Panel de Gestión de Escenarios (Administrador)</h2>
-                        <p class="text-muted">Control de escenarios deportivos, franjas horarias y estado de mantenimiento (HU-01, HU-02, HU-03, HU-04, HU-21).</p>
+                        <h2><i class="fa-solid fa-crown" style="color: #f59e0b;"></i> Panel de Control del Administrador</h2>
+                        <p class="text-muted">Gestión centralizada del Complejo Deportivo Javeriana: escenarios, mantenimiento y monitor global de reservas.</p>
                     </div>
-                    <button class="btn btn-primary" onclick="app.openModalCrearEscenario()">
-                        <i class="fa-solid fa-plus"></i> Registrar Nuevo Escenario
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <a href="http://localhost:8080/h2-console" target="_blank" class="btn btn-outline" title="Abrir consola SQL H2">
+                            <i class="fa-solid fa-database"></i> Consola SQL H2
+                        </a>
+                        <button class="btn btn-primary" onclick="app.openModalCrearEscenario()">
+                            <i class="fa-solid fa-plus"></i> Registrar Nuevo Escenario
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tarjetas KPI del Administrador -->
+                <div class="admin-kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-icon"><i class="fa-solid fa-futbol"></i></div>
+                        <div>
+                            <span class="kpi-label">Total Escenarios</span>
+                            <b class="kpi-value" id="kpi-total-canchas">0</b>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon icon-success"><i class="fa-solid fa-circle-check"></i></div>
+                        <div>
+                            <span class="kpi-label">Canchas Habilitadas</span>
+                            <b class="kpi-value" id="kpi-canchas-activas">0</b>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon icon-warning"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div>
+                            <span class="kpi-label">En Mantenimiento</span>
+                            <b class="kpi-value" id="kpi-canchas-mantenimiento">0</b>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon icon-info"><i class="fa-solid fa-users"></i></div>
+                        <div>
+                            <span class="kpi-label">Aforo Simultáneo</span>
+                            <b class="kpi-value" id="kpi-aforo-total">0</b>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pestañas del Administrador -->
+                <div class="admin-tabs">
+                    <button class="admin-tab-btn active" id="tab-btn-escenarios" onclick="app.switchAdminTab('escenarios')">
+                        <i class="fa-solid fa-layer-group"></i> Gestión de Escenarios y Mantenimiento
+                    </button>
+                    <button class="admin-tab-btn" id="tab-btn-reservas" onclick="app.switchAdminTab('reservas')">
+                        <i class="fa-solid fa-clipboard-list"></i> Monitor Global de Reservas del Campus
+                        <span class="badge-count" id="count-global-reservas" style="background:#f59e0b; color:#0f172a;">0</span>
                     </button>
                 </div>
 
-                <!-- Tabla de Escenarios Admin -->
-                <div class="table-card">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Escenario</th>
-                                <th>Disciplina</th>
-                                <th>Superficie</th>
-                                <th>Aforo</th>
-                                <th>Tarifa/h</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-escenarios-tbody">
-                            <!-- Inyectado por app.js -->
-                        </tbody>
-                    </table>
+                <!-- Pestaña 1: Tabla de Escenarios Admin -->
+                <div id="admin-view-escenarios">
+                    <div class="table-card">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Escenario</th>
+                                    <th>Disciplina</th>
+                                    <th>Superficie</th>
+                                    <th>Aforo</th>
+                                    <th>Tarifa/h</th>
+                                    <th>Estado</th>
+                                    <th>Acciones Rápidas</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-escenarios-tbody">
+                                <!-- Inyectado por app.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pestaña 2: Monitor Global de Reservas del Sistema -->
+                <div id="admin-view-reservas" style="display: none;">
+                    <div class="table-card">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Usuario / Deportista</th>
+                                    <th>Escenario</th>
+                                    <th>Fecha</th>
+                                    <th>Horario</th>
+                                    <th>Total</th>
+                                    <th>Estado</th>
+                                    <th>Acción Administrativa</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-reservas-tbody">
+                                <!-- Inyectado por app.js -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </section>

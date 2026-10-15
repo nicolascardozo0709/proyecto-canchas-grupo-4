@@ -44,17 +44,21 @@ const app = {
     updateNavUser() {
         const container = document.getElementById('nav-user-container');
         const adminBtn = document.getElementById('nav-admin');
+        const adminBar = document.getElementById('admin-indicator-bar');
 
         if (this.user && this.token) {
             const esAdmin = this.user.rol === 'ROLE_ADMIN';
             if (adminBtn) adminBtn.style.display = esAdmin ? 'flex' : 'none';
+            if (adminBar) adminBar.style.display = esAdmin ? 'block' : 'none';
 
             container.innerHTML = `
                 <div style="display:flex; align-items:center; gap:10px;">
                     <div style="text-align:right;">
-                        <div style="font-weight:700; font-size:0.88rem;">${this.user.nombre} ${this.user.apellido}</div>
-                        <span class="badge ${esAdmin ? 'badge-mantenimiento' : 'badge-primary'}" style="position:static; font-size:0.65rem;">
-                            ${esAdmin ? 'ADMINISTRADOR' : 'DEPORTISTA'}
+                        <div style="font-weight:700; font-size:0.88rem; ${esAdmin ? 'color:#d97706;' : ''}">
+                            ${esAdmin ? '<i class="fa-solid fa-crown"></i> ' : ''}${this.user.nombre} ${this.user.apellido}
+                        </div>
+                        <span class="badge ${esAdmin ? 'badge-mantenimiento' : 'badge-primary'}" style="position:static; font-size:0.65rem; ${esAdmin ? 'background:#f59e0b; color:#0f172a; font-weight:800;' : ''}">
+                            ${esAdmin ? 'ADMINISTRADOR CAMPUS' : 'DEPORTISTA'}
                         </span>
                     </div>
                     <button class="btn btn-outline btn-sm" onclick="app.logout()">
@@ -64,6 +68,7 @@ const app = {
             `;
         } else {
             if (adminBtn) adminBtn.style.display = 'none';
+            if (adminBar) adminBar.style.display = 'none';
             container.innerHTML = `
                 <button class="btn btn-outline" onclick="app.openAuthModal('login')">
                     <i class="fa-solid fa-arrow-right-to-bracket"></i> Iniciar Sesión
@@ -295,7 +300,7 @@ const app = {
                             </div>
                             ${enMantenimiento ? `
                                 <button class="btn btn-outline btn-sm" disabled style="opacity:0.6; cursor:not-allowed;">
-                                    <i class="fa-solid fa-lock"></i> No disponible
+                                    <i class="fa-solid fa-lock"></i> Mantenimiento
                                 </button>
                             ` : `
                                 <button class="btn btn-primary" onclick="app.iniciarFlujoReserva(${esc.id})">
@@ -303,10 +308,26 @@ const app = {
                                 </button>
                             `}
                         </div>
+
+                        ${this.user && this.user.rol === 'ROLE_ADMIN' ? `
+                            <div class="admin-card-actions">
+                                <button class="btn btn-sm ${enMantenimiento ? 'btn-success' : 'btn-outline'}" style="flex:1; font-size:0.75rem;" onclick="app.toggleMantenimiento(${esc.id}, ${!enMantenimiento})">
+                                    <i class="fa-solid fa-wrench"></i> ${enMantenimiento ? 'Habilitar' : 'Poner en Mantenimiento'}
+                                </button>
+                                <button class="btn btn-sm btn-outline" style="padding:6px 10px;" onclick="app.abrirModalEditarEscenario(${esc.id})" title="Editar Escenario">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger" style="padding:6px 10px;" onclick="app.eliminarEscenario(${esc.id})" title="Eliminar Escenario">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        ` : ''}
                     </div>
                 </div>
             `;
         }).join('');
+
+        this.actualizarAdminKpis();
     },
 
     // -------------------------------------------------------------
@@ -588,8 +609,135 @@ const app = {
                     </tr>
                 `;
             }).join('');
+
+            this.actualizarAdminKpis();
+            this.cargarReservasGlobalesAdmin();
         } catch (err) {
             console.error('Error en tabla admin:', err);
+        }
+    },
+
+    actualizarAdminKpis() {
+        if (!this.escenarios) return;
+        const total = this.escenarios.length;
+        const activas = this.escenarios.filter(e => !e.enMantenimiento).length;
+        const mantenimiento = this.escenarios.filter(e => e.enMantenimiento).length;
+        const aforo = this.escenarios.reduce((acc, e) => acc + (e.aforo || 0), 0);
+
+        const elTotal = document.getElementById('kpi-total-canchas');
+        const elActivas = document.getElementById('kpi-canchas-activas');
+        const elMant = document.getElementById('kpi-canchas-mantenimiento');
+        const elAforo = document.getElementById('kpi-aforo-total');
+
+        if (elTotal) elTotal.textContent = total;
+        if (elActivas) elActivas.textContent = activas;
+        if (elMant) elMant.textContent = mantenimiento;
+        if (elAforo) elAforo.textContent = `${aforo} pers.`;
+    },
+
+    switchAdminTab(tab) {
+        const viewEsc = document.getElementById('admin-view-escenarios');
+        const viewRes = document.getElementById('admin-view-reservas');
+        const btnEsc = document.getElementById('tab-btn-escenarios');
+        const btnRes = document.getElementById('tab-btn-reservas');
+
+        if (tab === 'escenarios') {
+            if (viewEsc) viewEsc.style.display = 'block';
+            if (viewRes) viewRes.style.display = 'none';
+            if (btnEsc) btnEsc.classList.add('active');
+            if (btnRes) btnRes.classList.remove('active');
+            this.cargarTablaAdmin();
+        } else {
+            if (viewEsc) viewEsc.style.display = 'none';
+            if (viewRes) viewRes.style.display = 'block';
+            if (btnEsc) btnEsc.classList.remove('active');
+            if (btnRes) btnRes.classList.add('active');
+            this.cargarReservasGlobalesAdmin();
+        }
+    },
+
+    async cargarReservasGlobalesAdmin() {
+        if (!this.token) return;
+        const tbody = document.getElementById('admin-reservas-tbody');
+        const countBadge = document.getElementById('count-global-reservas');
+        if (!tbody) return;
+
+        try {
+            const res = await fetch(`${API_BASE}/reservas`, {
+                headers: { 'Authorization': `Bearer ${this.token}` }
+            });
+            if (!res.ok) return;
+            const reservas = await res.json();
+            if (countBadge) countBadge.textContent = reservas.length;
+
+            if (reservas.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:var(--text-muted);">No hay reservas registradas en el sistema.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = reservas.map(r => {
+                const totalFormatted = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(r.precioTotal);
+                const esConfirmada = r.estado === 'CONFIRMADA';
+                const usuarioNombre = r.usuario ? `${r.usuario.nombre} ${r.usuario.apellido}` : (r.usuarioNombre || 'Deportista');
+                const usuarioEmail = r.usuario ? r.usuario.email : (r.usuarioEmail || '');
+
+                return `
+                    <tr>
+                        <td><code style="color:var(--accent); font-weight:700;">${r.codigoReserva}</code></td>
+                        <td>
+                            <b>${usuarioNombre}</b>
+                            <div style="font-size:0.75rem; color:var(--text-muted);">${usuarioEmail}</div>
+                        </td>
+                        <td>${r.escenarioNombre}</td>
+                        <td>${r.fecha}</td>
+                        <td><b>${r.horaInicio} - ${r.horaFin}</b></td>
+                        <td style="font-weight:700; color:var(--primary-dark);">${totalFormatted}</td>
+                        <td>
+                            <span class="badge ${esConfirmada ? 'badge-primary' : 'badge-mantenimiento'}" style="position:static;">
+                                ${r.estado}
+                            </span>
+                        </td>
+                        <td>
+                            ${esConfirmada ? `
+                                <button class="btn btn-danger btn-sm" onclick="app.cancelarReservaAdmin(${r.id})" title="Cancelar reserva por mantenimiento">
+                                    <i class="fa-solid fa-ban"></i> Cancelar
+                                </button>
+                            ` : `
+                                <span style="font-size:0.75rem; color:var(--text-muted);">${r.motivoCancelacion || 'Cancelada'}</span>
+                            `}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        } catch (err) {
+            console.error('Error cargando reservas globales admin:', err);
+        }
+    },
+
+    async cancelarReservaAdmin(id) {
+        const motivo = prompt('Ingresa el motivo administrativo de la cancelación (ej. Mantenimiento extraordinario):', 'Mantenimiento preventivo de escenario');
+        if (!motivo) return;
+
+        try {
+            const res = await fetch(`${API_BASE}/reservas/${id}/cancelar`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.token}`
+                },
+                body: JSON.stringify({ motivo })
+            });
+
+            if (!res.ok) {
+                const errData = await res.json();
+                throw new Error(errData.message || 'Error al cancelar la reserva');
+            }
+
+            this.showToast('Reserva cancelada correctamente por administración.', 'info');
+            this.cargarReservasGlobalesAdmin();
+            this.cargarEscenarios();
+        } catch (err) {
+            this.showToast(err.message, 'error');
         }
     },
 
