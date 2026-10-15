@@ -32,38 +32,12 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // Inicializar Usuarios si no existen
-        if (usuarioRepository.count() == 0) {
-            Usuario admin = new Usuario(
-                "Administrador",
-                "Javeriana",
-                "admin@javeriana.edu.co",
-                passwordEncoder.encode("admin123"),
-                "3001234567",
-                Rol.ROLE_ADMIN
-            );
-            usuarioRepository.save(admin);
-
-            Usuario user1 = new Usuario(
-                "Nicolás",
-                "Cardozo",
-                "nicolas.cardozo@javeriana.edu.co",
-                passwordEncoder.encode("user123"),
-                "3109876543",
-                Rol.ROLE_USER
-            );
-            usuarioRepository.save(user1);
-
-            Usuario user2 = new Usuario(
-                "Samuel",
-                "Correa",
-                "samuel.correa@javeriana.edu.co",
-                passwordEncoder.encode("user123"),
-                "3205551234",
-                Rol.ROLE_USER
-            );
-            usuarioRepository.save(user2);
-        }
+        // Inicializar Usuarios para cada integrante del Grupo 4 y Administrador
+        crearUsuarioSiNoExiste("Administrador", "Javeriana", "admin@javeriana.edu.co", "admin123", "3001234567", Rol.ROLE_ADMIN);
+        crearUsuarioSiNoExiste("Nicolás", "Cardozo Mejía", "nicolas.cardozo@javeriana.edu.co", "user123", "3109876543", Rol.ROLE_USER);
+        crearUsuarioSiNoExiste("Samuel", "Correa", "samuel.correa@javeriana.edu.co", "user123", "3205551234", Rol.ROLE_USER);
+        crearUsuarioSiNoExiste("Nicolás", "Espinosa Soler", "nicolas.espinosa@javeriana.edu.co", "user123", "3114445566", Rol.ROLE_USER);
+        crearUsuarioSiNoExiste("Gustavo", "Mejía", "gustavo.mejia@javeriana.edu.co", "user123", "3158889900", Rol.ROLE_USER);
 
         // Inicializar Escenarios y Franjas Horarias si no existen
         if (escenarioRepository.count() == 0) {
@@ -136,6 +110,13 @@ public class DataInitializer implements CommandLineRunner {
             );
             futbol11 = escenarioRepository.save(futbol11);
             crearFranjasEstandar(futbol11, 7, 19);
+        }
+    }
+
+    private void crearUsuarioSiNoExiste(String nombre, String apellido, String email, String password, String telefono, Rol rol) {
+        if (!usuarioRepository.existsByEmail(email)) {
+            Usuario u = new Usuario(nombre, apellido, email, passwordEncoder.encode(password), telefono, rol);
+            usuarioRepository.save(u);
         }
     }
 

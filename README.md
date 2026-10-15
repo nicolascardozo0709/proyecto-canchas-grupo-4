@@ -48,16 +48,24 @@ mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=mysql
 | Rol | Usuario (Email) | Contraseña | Capacidades |
 |---|---|---|---|
 | **Administrador** | `admin@javeriana.edu.co` | `admin123` | CRUD de canchas, control de mantenimiento y franjas. |
-| **Deportista** | `nicolas.cardozo@javeriana.edu.co` | `user123` | Búsqueda, reserva y autogestión de cancelaciones. |
+| **Nicolás Cardozo Mejía** | `nicolas.cardozo@javeriana.edu.co` | `user123` | Búsqueda, reserva y autogestión de cancelaciones. |
+| **Samuel Correa** | `samuel.correa@javeriana.edu.co` | `user123` | Pruebas de concurrencia y validación anti-overbooking. |
+| **Nicolás Espinosa Soler** | `nicolas.espinosa@javeriana.edu.co` | `user123` | Flujo de reservas y consulta de historial propio. |
+| **Gustavo Mejía** | `gustavo.mejia@javeriana.edu.co` | `user123` | Validación de franjas y autogestión de perfil. |
 
 ---
 
-## 🧪 Ejecución de Pruebas Automatizadas
+## 🧪 Pruebas del Sistema
 
+### 1. Pruebas Automatizadas (JUnit 5 + Mockito)
 ```cmd
+cd backend
 mvnw.cmd test
 ```
 Resultados: **19 pruebas ejecutadas con 100% de éxito**, incluyendo la prueba de concurrencia extrema con 8 hilos simultáneos validando la garantía Anti-Overbooking.
+
+### 2. Pruebas con Colección de Postman
+Importa en Postman el archivo oficial [`ReservaCanchas_Postman_Collection.json`](ReservaCanchas_Postman_Collection.json) (también en `docs/`). Incluye scripts automatizados que capturan el token JWT y prueban los flujos de login, catálogo, franjas, reservas, colisiones (409 Conflict) y cancelaciones con liberación atómica.
 
 ---
 
@@ -69,3 +77,4 @@ Todos los informes y manuales se encuentran disponibles en la carpeta `docs/`:
 3. [Guía de Arquitectura de Software y Código Fuente](docs/GUIA_DE_ARQUITECTURA_Y_CODIGO.md)
 4. [Reporte de Pruebas Automatizadas y Cobertura](docs/REPORTE_DE_PRUEBAS_Y_COBERTURA.md)
 5. [Registro de GitFlow y Pull Requests](docs/GITFLOW_Y_PULL_REQUESTS.md)
+6. [Colección de Postman v2.1.0](docs/ReservaCanchas_Postman_Collection.json)

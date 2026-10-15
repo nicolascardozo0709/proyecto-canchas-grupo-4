@@ -112,18 +112,21 @@ El sistema inicializa automáticamente las siguientes cuentas con contraseñas c
 | Rol | Correo Electrónico | Contraseña | Permisos y Capacidades |
 |---|---|---|---|
 | **Administrador** | `admin@javeriana.edu.co` | `admin123` | CRUD de canchas, creación de franjas, alternar estado de mantenimiento (HU-21), ver todas las reservas. |
-| **Deportista 1** | `nicolas.cardozo@javeriana.edu.co` | `user123` | Explorar catálogo, consultar matriz de franjas, crear reservas, autogestionar cancelaciones. |
-| **Deportista 2** | `samuel.correa@javeriana.edu.co` | `user123` | Crear reservas concurrentes para pruebas de colisión, ver historial propio. |
+| **Deportista 1 (Nicolás Cardozo Mejía)** | `nicolas.cardozo@javeriana.edu.co` | `user123` | Explorar catálogo, consultar matriz de disponibilidad, crear reservas, cancelar. |
+| **Deportista 2 (Samuel Correa)** | `samuel.correa@javeriana.edu.co` | `user123` | Pruebas de concurrencia y validación anti-overbooking simultánea. |
+| **Deportista 3 (Nicolás Espinosa Soler)** | `nicolas.espinosa@javeriana.edu.co` | `user123` | Pruebas de flujo de reservas y consulta de historial propio (HU-15). |
+| **Deportista 4 (Gustavo Mejía)** | `gustavo.mejia@javeriana.edu.co` | `user123` | Pruebas de validación de horarios y autogestión de perfil. |
 
-*Nota: También es posible registrar nuevos usuarios de inmediato desde el formulario web interactivo.*
+*Nota: Todos los integrantes cuentan con botones de auto-completado directo en el modal de inicio de sesión de la aplicación web.*
 
 ---
 
 ## 5. Ejecución de la Suite de Pruebas Automatizadas
 
-Para validar las pruebas unitarias y de integración:
+Para validar las 19 pruebas unitarias, de integración y concurrencia multihilo:
 
 ```cmd
+cd backend
 mvnw.cmd test
 ```
 
@@ -137,3 +140,25 @@ Para ejecutar el JAR compilado directamente:
 ```cmd
 java -jar backend\target\reserva-canchas-backend-1.0.0-SNAPSHOT.jar
 ```
+
+---
+
+## 6. Pruebas con Postman (Colección Oficial Incluida)
+
+Para facilitar la evaluación del docente y del equipo de desarrollo, se incluye la colección oficial de Postman exportada en formato v2.1.0:
+- **Ruta:** `ReservaCanchas_Postman_Collection.json` (en la raíz del proyecto y en la carpeta `docs/`).
+
+### Pasos para usar la colección en Postman:
+1. Abrir **Postman**.
+2. Hacer clic en **Import** (esquina superior izquierda) y seleccionar el archivo `ReservaCanchas_Postman_Collection.json`.
+3. La colección incluye scripts de prueba automáticos en JavaScript:
+   - Al ejecutar `1.1 Login Administrador` o `1.2 Login Deportista`, el token JWT se guarda automáticamente en las variables de la colección (`token_admin` y `token_user`).
+   - Las solicitudes subsiguientes (`POST /api/reservas`, `PUT /cancelar`, etc.) ya vienen configuradas con `Bearer {{token_user}}`.
+4. **Casos de prueba incluidos:**
+   - Autenticación para cada integrante y admin.
+   - Catálogo público de escenarios y consulta de franjas de 60 minutos.
+   - Mantenimiento de escenarios (HU-21).
+   - Creación de reservas transaccionales (HU-05).
+   - **Prueba de Colisión / Doble Reserva:** Verifica que el sistema responda con código HTTP `409 Conflict` (HU-07).
+   - **Prueba de Fecha Pasada:** Verifica que el sistema bloquee reservas pasadas con HTTP `400 Bad Request` (HU-08).
+   - **Cancelación y Liberación Atómica:** Cancela una reserva existente y comprueba que la franja puede ser re-reservada de inmediato por otro deportista (HU-06).

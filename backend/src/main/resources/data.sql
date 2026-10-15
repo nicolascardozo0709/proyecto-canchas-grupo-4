@@ -7,8 +7,10 @@
 -- $2a$12$K8yQd1gL3r1o8d9.qCqCae2M7qN7o.oT6P.R7FjF0o2N3B4P5yK5O -> 'admin123' / 'user123'
 INSERT INTO usuarios (id, nombre, apellido, email, password, telefono, rol, activo) VALUES
 (1, 'Administrador', 'Javeriana', 'admin@javeriana.edu.co', '$2a$12$y16Z3C3G8p2f/V1nE9Z7n.E0H.jYhI0J6a5Q4K9q9bY.T0w3L6D.G', '3001234567', 'ROLE_ADMIN', TRUE),
-(2, 'Nicolás', 'Cardozo', 'nicolas.cardozo@javeriana.edu.co', '$2a$12$y16Z3C3G8p2f/V1nE9Z7n.E0H.jYhI0J6a5Q4K9q9bY.T0w3L6D.G', '3109876543', 'ROLE_USER', TRUE),
-(3, 'Samuel', 'Correa', 'samuel.correa@javeriana.edu.co', '$2a$12$y16Z3C3G8p2f/V1nE9Z7n.E0H.jYhI0J6a5Q4K9q9bY.T0w3L6D.G', '3205551234', 'ROLE_USER', TRUE);
+(2, 'Nicolás', 'Cardozo Mejía', 'nicolas.cardozo@javeriana.edu.co', '$2a$12$y16Z3C3G8p2f/V1nE9Z7n.E0H.jYhI0J6a5Q4K9q9bY.T0w3L6D.G', '3109876543', 'ROLE_USER', TRUE),
+(3, 'Samuel', 'Correa', 'samuel.correa@javeriana.edu.co', '$2a$12$y16Z3C3G8p2f/V1nE9Z7n.E0H.jYhI0J6a5Q4K9q9bY.T0w3L6D.G', '3205551234', 'ROLE_USER', TRUE),
+(4, 'Nicolás', 'Espinosa Soler', 'nicolas.espinosa@javeriana.edu.co', '$2a$12$y16Z3C3G8p2f/V1nE9Z7n.E0H.jYhI0J6a5Q4K9q9bY.T0w3L6D.G', '3114445566', 'ROLE_USER', TRUE),
+(5, 'Gustavo', 'Mejía', 'gustavo.mejia@javeriana.edu.co', '$2a$12$y16Z3C3G8p2f/V1nE9Z7n.E0H.jYhI0J6a5Q4K9q9bY.T0w3L6D.G', '3158889900', 'ROLE_USER', TRUE);
 
 -- Escenarios Deportivos (Canchas)
 INSERT INTO escenarios (id, nombre, disciplina, superficie, aforo, iluminacion, tarifa_hora, en_mantenimiento, descripcion, imagen_url) VALUES
