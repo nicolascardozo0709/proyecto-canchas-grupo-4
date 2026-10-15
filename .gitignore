@@ -55,4 +55,8 @@ Desktop.ini
 
 # Local Binaries and Tools
 tools/
+backend/tools/
+*.lock.db
+URL_PUBLICA_ACTIVA.txt
+backend/URL_PUBLICA_ACTIVA.txt
 
