@@ -78,7 +78,7 @@ public class DataInitializer implements CommandLineRunner {
                 BigDecimal.valueOf(70000.00),
                 false,
                 "Pista de pádel con cerramiento de vidrio templado panorámico y césped monofilamento azul.",
-                "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800&auto=format&fit=crop"
+                "/padel.png"
             );
             padel = escenarioRepository.save(padel);
             crearFranjasEstandar(padel, 7, 22);
@@ -111,6 +111,14 @@ public class DataInitializer implements CommandLineRunner {
             futbol11 = escenarioRepository.save(futbol11);
             crearFranjasEstandar(futbol11, 7, 19);
         }
+
+        // Asegurar que la imagen del pádel esté siempre sincronizada con la fotografía oficial
+        escenarioRepository.findAll().forEach(e -> {
+            if (e.getDisciplina() == Disciplina.PADEL && !"/padel.png".equals(e.getImagenUrl())) {
+                e.setImagenUrl("/padel.png");
+                escenarioRepository.save(e);
+            }
+        });
     }
 
     private void crearUsuarioSiNoExiste(String nombre, String apellido, String email, String password, String telefono, Rol rol) {
