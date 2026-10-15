@@ -14,9 +14,9 @@ INSERT INTO usuarios (id, nombre, apellido, email, password, telefono, rol, acti
 
 -- Escenarios Deportivos (Canchas)
 INSERT INTO escenarios (id, nombre, disciplina, superficie, aforo, iluminacion, tarifa_hora, en_mantenimiento, descripcion, imagen_url) VALUES
-(1, 'Cancha Sintética 1 - El Campincito', 'FUTBOL', 'SINTETICA', 16, TRUE, 85000.00, FALSE, 'Cancha de fútbol 8 con grama sintética de última generación e iluminación LED para partidos nocturnos.', 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=800&auto=format&fit=crop'),
-(2, 'Pista Central de Tenis', 'TENIS', 'ARCILLA', 4, TRUE, 60000.00, FALSE, 'Cancha reglamentaria en polvo de ladrillo (arcilla roja), drenaje rápido y gradería.', 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&auto=format&fit=crop'),
-(3, 'Cancha de Pádel Panorámica', 'PADEL', 'SINTETICA', 4, TRUE, 70000.00, FALSE, 'Pista de pádel con cerramiento de vidrio panorámico templado y césped monofilamento azul.', 'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=800&auto=format&fit=crop'),
+(1, 'Cancha Sintética 1 - El Campincito', 'FUTBOL', 'SINTETICA', 16, TRUE, 85000.00, FALSE, 'Cancha de fútbol 8 con grama sintética de última generación e iluminación LED para partidos nocturnos.', 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&auto=format&fit=crop'),
+(2, 'Pista Central de Tenis', 'TENIS', 'ARCILLA', 4, TRUE, 60000.00, FALSE, 'Cancha reglamentaria en polvo de ladrillo (arcilla roja), drenaje rápido y gradería.', 'https://images.unsplash.com/photo-1558365849-6ebd8b0454b2?w=800&auto=format&fit=crop'),
+(3, 'Cancha de Pádel Panorámica', 'PADEL', 'SINTETICA', 4, TRUE, 70000.00, FALSE, 'Pista de pádel con cerramiento de vidrio panorámico templado y césped monofilamento azul.', 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800&auto=format&fit=crop'),
 (4, 'Coliseo de Baloncesto y Voleibol', 'BALONCESTO', 'PARQUET', 20, TRUE, 90000.00, FALSE, 'Tablón de madera parquet de alto impacto con aros retráctiles y demarcación multideportiva.', 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&auto=format&fit=crop'),
 (5, 'Cancha de Fútbol 11 - La Javeriana', 'FUTBOL', 'NATURAL', 22, TRUE, 120000.00, FALSE, 'Campo reglamentario de grama natural bermuda con sistema de riego tecnificado.', 'https://images.unsplash.com/photo-1459865264687-595d652de67e?w=800&auto=format&fit=crop');
 

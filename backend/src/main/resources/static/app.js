@@ -78,6 +78,11 @@ const app = {
                 </button>
             `;
         }
+
+        // Re-renderizar catálogo inmediatamente para ocultar/mostrar botones según el rol
+        if (this.escenarios && this.escenarios.length > 0) {
+            this.renderCatalogo();
+        }
     },
 
     openAuthModal(mode = 'login') {

@@ -50,7 +50,7 @@ public class DataInitializer implements CommandLineRunner {
                 BigDecimal.valueOf(85000.00),
                 false,
                 "Cancha de fútbol 8 con grama sintética de última generación e iluminación LED para partidos nocturnos.",
-                "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=800&auto=format&fit=crop"
+                "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&auto=format&fit=crop"
             );
             futbol8 = escenarioRepository.save(futbol8);
             crearFranjasEstandar(futbol8, 6, 22);
@@ -64,7 +64,7 @@ public class DataInitializer implements CommandLineRunner {
                 BigDecimal.valueOf(60000.00),
                 false,
                 "Cancha reglamentaria en polvo de ladrillo (arcilla roja), drenaje rápido y gradería lateral.",
-                "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&auto=format&fit=crop"
+                "https://images.unsplash.com/photo-1558365849-6ebd8b0454b2?w=800&auto=format&fit=crop"
             );
             tenis = escenarioRepository.save(tenis);
             crearFranjasEstandar(tenis, 6, 20);
@@ -78,7 +78,7 @@ public class DataInitializer implements CommandLineRunner {
                 BigDecimal.valueOf(70000.00),
                 false,
                 "Pista de pádel con cerramiento de vidrio templado panorámico y césped monofilamento azul.",
-                "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=800&auto=format&fit=crop"
+                "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800&auto=format&fit=crop"
             );
             padel = escenarioRepository.save(padel);
             crearFranjasEstandar(padel, 7, 22);
