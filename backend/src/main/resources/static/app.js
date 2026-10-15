@@ -15,12 +15,11 @@ const app = {
     filtroDisciplina: '',
 
     init() {
-        // Cargar token guardado si existe
-        this.token = localStorage.getItem('token_canchas');
-        const userJson = localStorage.getItem('user_canchas');
-        if (userJson) {
-            try { this.user = JSON.parse(userJson); } catch (e) { this.user = null; }
-        }
+        // Iniciar siempre como visitante público limpio (no auto-iniciar en perfil de administrador)
+        localStorage.removeItem('token_canchas');
+        localStorage.removeItem('user_canchas');
+        this.token = null;
+        this.user = null;
 
         this.updateNavUser();
         this.cargarEscenarios();
