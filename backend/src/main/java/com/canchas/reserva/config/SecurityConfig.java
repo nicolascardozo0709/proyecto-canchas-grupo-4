@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .requestMatchers("/h2-console/**").permitAll()
 
                 // Recursos Estáticos del Frontend SPA
-                .requestMatchers("/", "/index.html", "/styles.css", "/app.js", "/assets/**", "/favicon.ico").permitAll()
+                .requestMatchers("/", "/index.html", "/styles.css", "/app.js", "/assets/**", "/favicon.ico", "/*.png", "/*.jpg", "/*.svg", "/logo-javeriana.png").permitAll()
 
                 // Consultas públicas del catálogo de canchas y franjas
                 .requestMatchers(HttpMethod.GET, "/api/escenarios/**").permitAll()

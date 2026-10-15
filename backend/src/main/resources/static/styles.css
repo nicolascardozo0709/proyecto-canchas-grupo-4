@@ -76,6 +76,27 @@ body {
     color: var(--text-main);
 }
 
+.javeriana-nav-logo {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+    transition: transform var(--transition-fast);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.06));
+}
+
+.brand-logo:hover .javeriana-nav-logo {
+    transform: scale(1.05);
+}
+
+.modal-javeriana-logo {
+    height: 72px;
+    width: auto;
+    object-fit: contain;
+    margin: 0 auto 12px;
+    display: block;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.08));
+}
+
 .logo-icon {
     width: 44px;
     height: 44px;

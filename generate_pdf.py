@@ -287,10 +287,11 @@ HTML_CONTENT = """<!DOCTYPE html>
 <div class="page">
   <div class="page-number">1</div>
   <div class="cover-page">
+    <img src="backend/src/main/resources/static/logo-javeriana.png" alt="Pontificia Universidad Javeriana" style="height: 115px; width: auto; margin-bottom: 12px; object-fit: contain;">
     <div class="cover-univ">Pontificia Universidad Javeriana</div>
     <div class="cover-facultad">Facultad de Ingeniería — Departamento de Ingeniería de Sistemas</div>
     
-    <div style="height: 0.35in;"></div>
+    <div style="height: 0.25in;"></div>
     
     <div class="cover-title">
       Proyecto 3: Plataforma de Reserva de Escenarios Deportivos
