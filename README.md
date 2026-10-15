@@ -12,27 +12,28 @@
 
 ## 👥 Equipo de Trabajo — Grupo 4
 
-| Integrante | Rol en el Proyecto | Correo Institucional |
+| Integrante | Rol en el Proyecto | Perfil GitHub |
 |---|---|---|
-| **Nicolás Cardozo Mejía** | Líder UI/UX y Arquitectura Frontend | `nicolas.cardozo0709@gmail.com` |
-| **Samuel Correa** | Líder DevOps, Requisitos y Configuración | `samuel.correa@javeriana.edu.co` |
-| **Nicolás Espinosa Soler** | Líder Backend y Administrador de Base de Datos (DBA) | `nicolas.espinosa@javeriana.edu.co` |
-| **Gustavo Mejía** | Coordinador de Calidad (QA Lead) y Product Owner | `gustavo.mejia@javeriana.edu.co` |
+| **Nicolás Cardozo Mejía** | Líder UI/UX y Arquitectura Frontend | [@nicolascardozo0709](https://github.com/nicolascardozo0709) |
+| **Samuel Correa** | Líder DevOps, Requisitos y Configuración | [@SACOMO82](https://github.com/SACOMO82) |
+| **Nicolás Espinosa Soler** | Líder Backend y Administrador de Base de Datos (DBA) | [@nicoespin08](https://github.com/nicoespin08) |
+| **Gustavo Mejía** | Coordinador de Calidad (QA Lead) y Product Owner | Equipo Grupo 4 |
 
 ---
 
 ## 🚀 Inicio Rápido (Quick Start)
 
 ### Opción 1: Modo Autónomo (Evaluación Inmediata con Base de Datos H2)
-No requiere instalar MySQL ni Docker. La aplicación levanta el backend, la base de datos en memoria y la interfaz web lista para usar:
+No requiere instalar MySQL ni Docker. La aplicación levanta el backend, la base de datos persistente y la interfaz web lista para usar:
 
 ```cmd
 mvnw.cmd spring-boot:run
 ```
+*(O simplemente ejecuta con doble clic el archivo `iniciar_plataforma.bat`)*
 
 - **Aplicación Web (Frontend SPA):** `http://localhost:8080`
 - **Documentación Swagger / OpenAPI 3:** `http://localhost:8080/swagger-ui.html`
-- **Consola H2 Database:** `http://localhost:8080/h2-console` (JDBC URL: `jdbc:h2:mem:canchasdb`)
+- **Consola H2 Database:** `http://localhost:8080/h2-console` (JDBC URL: `jdbc:h2:file:./data/canchasdb`)
 
 ### Opción 2: Modo Producción (MySQL 8 y Docker Compose)
 ```bash
@@ -47,11 +48,12 @@ mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=mysql
 
 | Rol | Usuario (Email) | Contraseña | Capacidades |
 |---|---|---|---|
-| **Administrador** | `admin@javeriana.edu.co` | `admin123` | CRUD de canchas, control de mantenimiento y franjas. |
-| **Nicolás Cardozo Mejía** | `nicolas.cardozo@javeriana.edu.co` | `user123` | Búsqueda, reserva y autogestión de cancelaciones. |
-| **Samuel Correa** | `samuel.correa@javeriana.edu.co` | `user123` | Pruebas de concurrencia y validación anti-overbooking. |
-| **Nicolás Espinosa Soler** | `nicolas.espinosa@javeriana.edu.co` | `user123` | Flujo de reservas y consulta de historial propio. |
-| **Gustavo Mejía** | `gustavo.mejia@javeriana.edu.co` | `user123` | Validación de franjas y autogestión de perfil. |
+| **Administrador** | `admin@canchas.com` | `admin123` | CRUD de canchas, control de mantenimiento y franjas. |
+| **Deportista (Usuario Estándar)** | `usuario@canchas.com` | `user123` | Búsqueda, reserva y autogestión de cancelaciones. |
+| **Nicolás Cardozo Mejía** | `nicolas@canchas.com` | `user123` | Flujo de reserva y consulta de perfil. |
+| **Samuel Correa** | `samuel@canchas.com` | `user123` | Pruebas de concurrencia y reserva. |
+| **Nicolás Espinosa Soler** | `espinosa@canchas.com` | `user123` | Validación de reservas y franjas. |
+| **Gustavo Mejía** | `gustavo@canchas.com` | `user123` | Autogestión de reservas deportivas. |
 
 ---
 
@@ -72,7 +74,7 @@ Importa en Postman el archivo oficial [`ReservaCanchas_Postman_Collection.json`]
 ## 📚 Documentación Técnica Entregable
 
 Todos los informes y manuales se encuentran disponibles en la carpeta `docs/`:
-1. [Informe Maestro Entrega 2 (Normas APA 7)](docs/INFORME_ENTREGA_2_DESARROLLO_Y_PRUEBAS.md)
+1. [Informe de Desarrollo y Pruebas - Entrega 2](docs/INFORME_ENTREGA_2_DESARROLLO_Y_PRUEBAS.md)
 2. [Manual de Instalación y Configuración](docs/MANUAL_DE_INSTALACION_Y_CONFIGURACION.md)
 3. [Guía de Arquitectura de Software y Código Fuente](docs/GUIA_DE_ARQUITECTURA_Y_CODIGO.md)
 4. [Reporte de Pruebas Automatizadas y Cobertura](docs/REPORTE_DE_PRUEBAS_Y_COBERTURA.md)

@@ -32,12 +32,13 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // Inicializar Usuarios para cada integrante del Grupo 4 y Administrador
-        crearUsuarioSiNoExiste("Administrador", "Javeriana", "admin@javeriana.edu.co", "admin123", "3001234567", Rol.ROLE_ADMIN);
-        crearUsuarioSiNoExiste("Nicolás", "Cardozo Mejía", "nicolas.cardozo@javeriana.edu.co", "user123", "3109876543", Rol.ROLE_USER);
-        crearUsuarioSiNoExiste("Samuel", "Correa", "samuel.correa@javeriana.edu.co", "user123", "3205551234", Rol.ROLE_USER);
-        crearUsuarioSiNoExiste("Nicolás", "Espinosa Soler", "nicolas.espinosa@javeriana.edu.co", "user123", "3114445566", Rol.ROLE_USER);
-        crearUsuarioSiNoExiste("Gustavo", "Mejía", "gustavo.mejia@javeriana.edu.co", "user123", "3158889900", Rol.ROLE_USER);
+        // Inicializar Usuarios para roles del sistema y compañeros del equipo
+        crearUsuarioSiNoExiste("Administrador", "Sistema", "admin@canchas.com", "admin123", "3001234567", Rol.ROLE_ADMIN);
+        crearUsuarioSiNoExiste("Usuario", "Deportista", "usuario@canchas.com", "user123", "3109876543", Rol.ROLE_USER);
+        crearUsuarioSiNoExiste("Nicolás", "Cardozo", "nicolas@canchas.com", "user123", "3109876543", Rol.ROLE_USER);
+        crearUsuarioSiNoExiste("Samuel", "Correa", "samuel@canchas.com", "user123", "3205551234", Rol.ROLE_USER);
+        crearUsuarioSiNoExiste("Nicolás", "Espinosa", "espinosa@canchas.com", "user123", "3114445566", Rol.ROLE_USER);
+        crearUsuarioSiNoExiste("Gustavo", "Mejía", "gustavo@canchas.com", "user123", "3158889900", Rol.ROLE_USER);
 
         // Inicializar Escenarios y Franjas Horarias si no existen
         if (escenarioRepository.count() == 0) {
