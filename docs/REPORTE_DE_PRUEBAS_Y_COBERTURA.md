@@ -42,6 +42,10 @@ Para garantizar la robustez, integridad y confiabilidad requeridas por la rúbri
 | **Seguridad JWT** (Login Exitoso) | `AuthServiceTest` | `login_Exito()` | Unitaria | **EXITOSA** |
 | **Flujo Completo** (Registro → Login → Reserva → Cancelación) | `ReservaIntegrationTest` | `testFlujoCompletoDeReserva()` | Integración | **EXITOSA** |
 | **Validación REST** (Fecha Pasada 400 Bad Request) | `ReservaIntegrationTest` | `testRechazoFechaPasada()` | Integración | **EXITOSA** |
+| **Seguridad Endpoint** (Rechazo sin Token 403) | `CorsAndSecurityTest` | `accesoSinToken_Retorna403()` | Seguridad | **EXITOSA** |
+| **Seguridad Catálogo** (Acceso Público 200) | `CorsAndSecurityTest` | `accesoPublicoEscenarios_Retorna200()` | Seguridad | **EXITOSA** |
+| **Protección Clickjacking** (X-Frame-Options SAMEORIGIN) | `CorsAndSecurityTest` | `cabecerasSeguridad_ContieneFrameOptionsSameOrigin()` | Seguridad | **EXITOSA** |
+| **CORS Preflight** (Orígenes y Credenciales Permitidas) | `CorsAndSecurityTest` | `corsPreflight_OrigenPermitido_RetornaCabecerasValidas()` | Seguridad/CORS | **EXITOSA** |
 | **Concurrencia Extrema** (8 hilos en paralelo) | `AntiColisionConcurrencyTest` | `testConcurrenciaAntiOverbooking()` | Concurrencia | **EXITOSA** |
 
 ---

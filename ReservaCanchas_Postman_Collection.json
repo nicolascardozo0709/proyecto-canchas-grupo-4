@@ -32,7 +32,7 @@
       "name": "1. Autenticación (JWT & BCrypt Cost 12)",
       "item": [
         {
-          "name": "1.1 Login Administrador (admin@javeriana.edu.co)",
+          "name": "1.1 Login Administrador (admin@canchas.com)",
           "event": [
             {
               "listen": "test",
@@ -62,7 +62,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@javeriana.edu.co\",\n  \"password\": \"admin123\"\n}"
+              "raw": "{\n  \"email\": \"admin@canchas.com\",\n  \"password\": \"admin123\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
@@ -84,7 +84,7 @@
                   "var jsonData = pm.response.json();",
                   "pm.test(\"Token JWT asignado a Nicolás\", function () {",
                   "    pm.expect(jsonData.token).to.be.a('string');",
-                  "    pm.expect(jsonData.email).to.eql('nicolas.cardozo@javeriana.edu.co');",
+                  "    pm.expect(jsonData.email).to.eql('nicolas@canchas.com');",
                   "});",
                   "pm.collectionVariables.set(\"token_user\", jsonData.token);"
                 ],
@@ -102,7 +102,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"nicolas.cardozo@javeriana.edu.co\",\n  \"password\": \"user123\"\n}"
+              "raw": "{\n  \"email\": \"nicolas@canchas.com\",\n  \"password\": \"user123\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
@@ -136,7 +136,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"samuel.correa@javeriana.edu.co\",\n  \"password\": \"user123\"\n}"
+              "raw": "{\n  \"email\": \"samuel@canchas.com\",\n  \"password\": \"user123\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
@@ -170,7 +170,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"nicolas.espinosa@javeriana.edu.co\",\n  \"password\": \"user123\"\n}"
+              "raw": "{\n  \"email\": \"espinosa@canchas.com\",\n  \"password\": \"user123\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
@@ -204,7 +204,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"gustavo.mejia@javeriana.edu.co\",\n  \"password\": \"user123\"\n}"
+              "raw": "{\n  \"email\": \"gustavo@canchas.com\",\n  \"password\": \"user123\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
@@ -225,7 +225,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Estudiante\",\n  \"apellido\": \"Pruebas\",\n  \"email\": \"estudiante.test@javeriana.edu.co\",\n  \"password\": \"Password123*\",\n  \"telefono\": \"3101112233\",\n  \"rol\": \"ROLE_USER\"\n}"
+              "raw": "{\n  \"nombre\": \"Estudiante\",\n  \"apellido\": \"Pruebas\",\n  \"email\": \"estudiante.test@canchas.com\",\n  \"password\": \"Password123*\",\n  \"telefono\": \"3101112233\",\n  \"rol\": \"ROLE_USER\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/registro",
