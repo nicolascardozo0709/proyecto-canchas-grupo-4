@@ -37,7 +37,7 @@ class ReservaIntegrationTest {
     void testFlujoCompletoDeReserva() throws Exception {
         // 1. Registro de Usuario Deportista
         RegisterRequest registerReq = new RegisterRequest(
-            "Mateo", "Ríos", "mateo.rios@javeriana.edu.co", "password123", "3150001122", Rol.ROLE_USER
+            "Mateo", "Ríos", "mateo.rios@canchas.com", "password123", "3150001122", Rol.ROLE_USER
         );
 
         mockMvc.perform(post("/api/auth/registro")
@@ -45,10 +45,10 @@ class ReservaIntegrationTest {
                 .content(objectMapper.writeValueAsString(registerReq)))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.token").isNotEmpty())
-            .andExpect(jsonPath("$.email").value("mateo.rios@javeriana.edu.co"));
+            .andExpect(jsonPath("$.email").value("mateo.rios@canchas.com"));
 
         // 2. Login para obtener Token JWT
-        LoginRequest loginReq = new LoginRequest("mateo.rios@javeriana.edu.co", "password123");
+        LoginRequest loginReq = new LoginRequest("mateo.rios@canchas.com", "password123");
         MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginReq)))
@@ -102,7 +102,7 @@ class ReservaIntegrationTest {
     @Test
     @DisplayName("HU-08: Debe rechazar reservas con fecha pasada retornando 400 Bad Request")
     void testRechazoFechaPasada() throws Exception {
-        LoginRequest loginReq = new LoginRequest("admin@javeriana.edu.co", "admin123");
+        LoginRequest loginReq = new LoginRequest("admin@canchas.com", "admin123");
         MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginReq)))

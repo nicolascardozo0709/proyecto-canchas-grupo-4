@@ -19,19 +19,27 @@ public class DataInitializer implements CommandLineRunner {
     private final EscenarioRepository escenarioRepository;
     private final FranjaHorariaRepository franjaRepository;
     private final PasswordEncoder passwordEncoder;
+    private final org.springframework.core.env.Environment environment;
 
     public DataInitializer(UsuarioRepository usuarioRepository,
                            EscenarioRepository escenarioRepository,
                            FranjaHorariaRepository franjaRepository,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           org.springframework.core.env.Environment environment) {
         this.usuarioRepository = usuarioRepository;
         this.escenarioRepository = escenarioRepository;
         this.franjaRepository = franjaRepository;
         this.passwordEncoder = passwordEncoder;
+        this.environment = environment;
     }
 
     @Override
     public void run(String... args) {
+        // En perfil de producción (prod), no se crean credenciales por defecto con contraseñas conocidas
+        if (environment.acceptsProfiles(org.springframework.core.env.Profiles.of("prod"))) {
+            return;
+        }
+
         // Inicializar Usuarios para roles del sistema y compañeros del equipo
         crearUsuarioSiNoExiste("Administrador", "Sistema", "admin@canchas.com", "admin123", "3001234567", Rol.ROLE_ADMIN);
         crearUsuarioSiNoExiste("Usuario", "Deportista", "usuario@canchas.com", "user123", "3109876543", Rol.ROLE_USER);

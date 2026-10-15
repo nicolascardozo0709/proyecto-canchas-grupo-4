@@ -52,14 +52,14 @@ class AuthServiceTest {
     @DisplayName("HU-13: Debe registrar un nuevo deportista exitosamente con contraseña cifrada")
     void registrar_Exito() {
         RegisterRequest request = new RegisterRequest(
-            "Samuel", "Correa", "samuel@javeriana.edu.co", "pass123", "3009998888", Rol.ROLE_USER
+            "Samuel", "Correa", "samuel@canchas.com", "pass123", "3009998888", Rol.ROLE_USER
         );
 
-        when(usuarioRepository.existsByEmail("samuel@javeriana.edu.co")).thenReturn(false);
+        when(usuarioRepository.existsByEmail("samuel@canchas.com")).thenReturn(false);
         when(passwordEncoder.encode("pass123")).thenReturn("$2a$12$hashedpassword");
 
         Usuario usuarioGuardado = new Usuario(
-            "Samuel", "Correa", "samuel@javeriana.edu.co", "$2a$12$hashedpassword", "3009998888", Rol.ROLE_USER
+            "Samuel", "Correa", "samuel@canchas.com", "$2a$12$hashedpassword", "3009998888", Rol.ROLE_USER
         );
         usuarioGuardado.setId(25L);
 
@@ -69,7 +69,7 @@ class AuthServiceTest {
 
         assertThat(response).isNotNull();
         assertThat(response.getToken()).isNotEmpty();
-        assertThat(response.getEmail()).isEqualTo("samuel@javeriana.edu.co");
+        assertThat(response.getEmail()).isEqualTo("samuel@canchas.com");
         assertThat(response.getRol()).isEqualTo(Rol.ROLE_USER);
         verify(passwordEncoder).encode("pass123");
         verify(usuarioRepository).save(any(Usuario.class));
@@ -79,10 +79,10 @@ class AuthServiceTest {
     @DisplayName("HU-13: Debe rechazar el registro si el email ya existe")
     void registrar_EmailDuplicado_LanzaExcepcion() {
         RegisterRequest request = new RegisterRequest(
-            "Samuel", "Correa", "duplicado@javeriana.edu.co", "pass123", "3009998888", Rol.ROLE_USER
+            "Samuel", "Correa", "duplicado@canchas.com", "pass123", "3009998888", Rol.ROLE_USER
         );
 
-        when(usuarioRepository.existsByEmail("duplicado@javeriana.edu.co")).thenReturn(true);
+        when(usuarioRepository.existsByEmail("duplicado@canchas.com")).thenReturn(true);
 
         assertThatThrownBy(() -> authService.registrar(request))
             .isInstanceOf(BusinessException.class)
@@ -94,9 +94,9 @@ class AuthServiceTest {
     @Test
     @DisplayName("Debe autenticar credenciales válidas y retornar JWT")
     void login_Exito() {
-        LoginRequest request = new LoginRequest("admin@javeriana.edu.co", "admin123");
+        LoginRequest request = new LoginRequest("admin@canchas.com", "admin123");
 
-        Usuario admin = new Usuario("Admin", "Javeriana", "admin@javeriana.edu.co", "hash", "123", Rol.ROLE_ADMIN);
+        Usuario admin = new Usuario("Admin", "Javeriana", "admin@canchas.com", "hash", "123", Rol.ROLE_ADMIN);
         admin.setId(1L);
         CustomUserDetails userDetails = new CustomUserDetails(admin);
         Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

@@ -138,17 +138,22 @@ Cada acción realizada en la interfaz web (crear usuario, reservar cancha o camb
 
 ## 6. Ejecución de Pruebas Automatizadas (QA)
 
-Para verificar el 100% de éxito en las 19 pruebas del sistema:
+Para verificar el 100% de éxito en las 23 pruebas del sistema:
 1. Abre tu terminal en la carpeta `backend`.
 2. Ejecuta:
    ```powershell
    .\mvnw.cmd test
    ```
 3. El motor de pruebas ejecutará:
-   * **Pruebas Unitarias:** Validación de lógica en `AuthServiceTest`, `EscenarioServiceTest` y `ReservaServiceTest`.
-   * **Pruebas de Integración:** Controladores REST y flujos de reserva en `ReservaIntegrationTest`.
-   * **Prueba de Concurrencia Multihilo:** `AntiColisionConcurrencyTest`, donde 8 hilos simultáneos disparan una reserva idéntica mediante `CountDownLatch` y el sistema garantiza exactamente 1 reserva confirmada y 7 rechazadas.
-4. Resultado esperado: **`BUILD SUCCESS`** sin fallos ni errores.
+   * **Pruebas Unitarias (16 pruebas):** En `AuthServiceTest`, `EscenarioServiceTest` y `ReservaServiceTest`, probando hashing BCrypt, token JWT, validación de franjas y restricciones de negocio.
+   * **Pruebas de Seguridad y CORS (4 pruebas):** En `CorsAndSecurityTest`, validando denegación 403 a peticiones no autenticadas, protección contra Clickjacking (`X-Frame-Options: SAMEORIGIN`) y preflights CORS.
+   * **Pruebas de Integración (2 pruebas):** En `ReservaIntegrationTest`, recorriendo el flujo completo de Registro -> Login -> Reserva -> Colisión 409 -> Cancelación -> Re-reserva y rechazo de fechas pasadas.
+   * **Prueba de Concurrencia Multihilo (1 prueba):** `AntiColisionConcurrencyTest`, donde 8 hilos simultáneos disparan una reserva idéntica mediante `CountDownLatch` y el sistema garantiza exactamente 1 reserva confirmada y 7 rechazadas.
+4. Resultado certificado: **`Tests run: 23, Failures: 0, Errors: 0, Skipped: 0 — BUILD SUCCESS`**.
+
+### 6.1. Perfil de Evaluación vs. Perfil de Producción Estricto
+* **Perfil por Defecto (`default`):** Optimizado para evaluación universitaria y desarrollo local. Habilita la consola H2, siembra escenarios y usuarios demo para los evaluadores y enlaza el túnel seguro de acceso público.
+* **Perfil de Producción (`prod`):** Se activa mediante la variable de entorno `SPRING_PROFILES_ACTIVE=prod`. En este modo, se desactiva la consola H2 (`spring.h2.console.enabled=false`), se exige el paso obligatorio de `JWT_SECRET` y credenciales de MySQL sin valores por defecto, se inhabilita la siembra de cuentas con contraseñas conocidas y se restringen los orígenes CORS estrictamente a dominios corporativos autorizados (`cors.allowed-origins`).
 
 ---
 

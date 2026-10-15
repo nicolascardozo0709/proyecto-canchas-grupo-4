@@ -64,7 +64,7 @@ mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=mysql
 cd backend
 mvnw.cmd test
 ```
-Resultados: **19 pruebas ejecutadas con 100% de éxito**, incluyendo la prueba de concurrencia extrema con 8 hilos simultáneos validando la garantía Anti-Overbooking.
+Resultados: **23 pruebas ejecutadas con 100% de éxito**, incluyendo seguridad/CORS, integración E2E y la prueba de concurrencia multihilo con 8 peticiones simultáneas validando la garantía Anti-Overbooking.
 
 ### 2. Pruebas con Colección de Postman
 Importa en Postman el archivo oficial [`ReservaCanchas_Postman_Collection.json`](ReservaCanchas_Postman_Collection.json) (también en `docs/`). Incluye scripts automatizados que capturan el token JWT y prueban los flujos de login, catálogo, franjas, reservas, colisiones (409 Conflict) y cancelaciones con liberación atómica.
@@ -74,9 +74,10 @@ Importa en Postman el archivo oficial [`ReservaCanchas_Postman_Collection.json`]
 ## 📚 Documentación Técnica Entregable
 
 Todos los informes y manuales se encuentran disponibles en la carpeta `docs/`:
-1. [Informe de Desarrollo y Pruebas - Entrega 2](docs/INFORME_ENTREGA_2_DESARROLLO_Y_PRUEBAS.md)
-2. [Manual de Instalación y Configuración](docs/MANUAL_DE_INSTALACION_Y_CONFIGURACION.md)
-3. [Guía de Arquitectura de Software y Código Fuente](docs/GUIA_DE_ARQUITECTURA_Y_CODIGO.md)
-4. [Reporte de Pruebas Automatizadas y Cobertura](docs/REPORTE_DE_PRUEBAS_Y_COBERTURA.md)
-5. [Registro de GitFlow y Pull Requests](docs/GITFLOW_Y_PULL_REQUESTS.md)
-6. [Colección de Postman v2.1.0](docs/ReservaCanchas_Postman_Collection.json)
+1. [Guía Completa de Uso de la Plataforma](docs/GUIA_DE_USO_PLATAFORMA.md) ⭐
+2. [Informe de Desarrollo y Pruebas - Entrega 2](docs/INFORME_ENTREGA_2_DESARROLLO_Y_PRUEBAS.md)
+3. [Manual de Instalación y Configuración](docs/MANUAL_DE_INSTALACION_Y_CONFIGURACION.md)
+4. [Guía de Arquitectura de Software y Código Fuente](docs/GUIA_DE_ARQUITECTURA_Y_CODIGO.md)
+5. [Reporte de Pruebas Automatizadas y Cobertura](docs/REPORTE_DE_PRUEBAS_Y_COBERTURA.md)
+6. [Registro de GitFlow y Pull Requests](docs/GITFLOW_Y_PULL_REQUESTS.md)
+7. [Colección de Postman v2.1.0](docs/ReservaCanchas_Postman_Collection.json)

@@ -53,7 +53,7 @@ class ReservaServiceTest {
 
     @BeforeEach
     void setUp() {
-        usuarioMock = new Usuario("Nicolás", "Cardozo", "nicolas@javeriana.edu.co", "hash", "300123", Rol.ROLE_USER);
+        usuarioMock = new Usuario("Nicolás", "Cardozo", "nicolas@canchas.com", "hash", "300123", Rol.ROLE_USER);
         usuarioMock.setId(10L);
 
         escenarioMock = new Escenario(
@@ -174,7 +174,7 @@ class ReservaServiceTest {
     @DisplayName("HU-19: Un usuario regular no puede cancelar reservas pertenecientes a otro usuario")
     void cancelarReserva_UsuarioAjeno_LanzaUnauthorized() {
         LocalDate fecha = LocalDate.now().plusDays(2);
-        Usuario otroUsuario = new Usuario("Carlos", "Gómez", "carlos@javeriana.edu.co", "hash", "311111", Rol.ROLE_USER);
+        Usuario otroUsuario = new Usuario("Carlos", "Gómez", "carlos@canchas.com", "hash", "311111", Rol.ROLE_USER);
         otroUsuario.setId(99L);
 
         Reserva reservaDeCarlos = new Reserva("RES-CARLOS", otroUsuario, escenarioMock, franjaMock, fecha, BigDecimal.valueOf(85000.00));
