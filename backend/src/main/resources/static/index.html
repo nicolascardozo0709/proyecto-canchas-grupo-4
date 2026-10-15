@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canchas Javeriana - Reserva de Escenarios Deportivos</title>
+    <!-- Google Fonts Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Barra Superior de Navegación -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#" class="brand-logo" onclick="app.showSection('catalogo')">
+                <div class="logo-icon"><i class="fa-solid fa-futbol"></i></div>
+                <div class="logo-text">
+                    <span class="logo-title">CANCHAS<b>JAVERIANA</b></span>
+                    <span class="logo-subtitle">Complejo Deportivo Universitario</span>
+                </div>
+            </a>
+
+            <nav class="nav-links">
+                <button class="nav-item active" id="nav-catalogo" onclick="app.showSection('catalogo')">
+                    <i class="fa-solid fa-compass"></i> Explorar Canchas
+                </button>
+                <button class="nav-item" id="nav-mis-reservas" onclick="app.showSection('mis-reservas')">
+                    <i class="fa-solid fa-calendar-check"></i> Mis Reservas
+                    <span class="badge-count" id="count-reservas">0</span>
+                </button>
+                <button class="nav-item admin-only" id="nav-admin" onclick="app.showSection('admin')" style="display: none;">
+                    <i class="fa-solid fa-shield-halved"></i> Gestión Admin
+                </button>
+            </nav>
+
+            <div class="nav-user" id="nav-user-container">
+                <button class="btn btn-outline" id="btn-login-modal" onclick="app.openAuthModal('login')">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Iniciar Sesión
+                </button>
+                <button class="btn btn-primary" id="btn-register-modal" onclick="app.openAuthModal('register')">
+                    <i class="fa-solid fa-user-plus"></i> Registrarse
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Notificaciones Toast -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Contenido Principal Dinámico -->
+    <main class="main-content">
+        <!-- ========================================== -->
+        <!-- SECCIÓN 1: WF-01 CATÁLOGO DE CANCHAS -->
+        <!-- ========================================== -->
+        <section id="section-catalogo" class="content-section active">
+            <!-- Hero Banner -->
+            <div class="hero-banner">
+                <div class="hero-badge"><i class="fa-solid fa-award"></i> Sistema Oficial de Reservas 2026-3</div>
+                <h1>Reserva tu Escenario Deportivo</h1>
+                <p>Elige tu disciplina favorita, valida disponibilidad en tiempo real sin colisiones y asegura tu espacio con confirmación instantánea.</p>
+                
+                <!-- Barra de Filtros Rápidos -->
+                <div class="filter-bar">
+                    <div class="filter-pills">
+                        <button class="pill active" data-disciplina="" onclick="app.filterDisciplina('')">
+                            <i class="fa-solid fa-border-all"></i> Todos los Deportes
+                        </button>
+                        <button class="pill" data-disciplina="FUTBOL" onclick="app.filterDisciplina('FUTBOL')">
+                            <i class="fa-solid fa-futbol"></i> Fútbol
+                        </button>
+                        <button class="pill" data-disciplina="TENIS" onclick="app.filterDisciplina('TENIS')">
+                            <i class="fa-solid fa-table-tennis-paddle-ball"></i> Tenis
+                        </button>
+                        <button class="pill" data-disciplina="PADEL" onclick="app.filterDisciplina('PADEL')">
+                            <i class="fa-solid fa-baseball-bat-ball"></i> Pádel
+                        </button>
+                        <button class="pill" data-disciplina="BALONCESTO" onclick="app.filterDisciplina('BALONCESTO')">
+                            <i class="fa-solid fa-basketball"></i> Baloncesto & Voley
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid de Tarjetas de Escenarios -->
+            <div class="section-container">
+                <div class="section-header">
+                    <h2>Escenarios Disponibles <span id="catalogo-total">(Cargando...)</span></h2>
+                    <span class="text-muted"><i class="fa-solid fa-clock"></i> Franjas estandarizadas de 60 minutos</span>
+                </div>
+                <div id="escenarios-grid" class="cards-grid">
+                    <!-- Tarjetas inyectadas dinámicamente con app.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SECCIÓN 2: WF-02 RESERVA Y MATRIZ DE HORARIOS -->
+        <!-- ========================================== -->
+        <section id="section-reserva" class="content-section">
+            <div class="section-container">
+                <div class="back-link" onclick="app.showSection('catalogo')">
+                    <i class="fa-solid fa-arrow-left"></i> Volver al Catálogo
+                </div>
+
+                <div class="reserva-layout">
+                    <!-- Panel Izquierdo: Datos de la Cancha y Selector de Fecha -->
+                    <div class="reserva-details-panel">
+                        <div class="cancha-detail-card">
+                            <img id="res-cancha-img" src="" alt="Cancha">
+                            <div class="cancha-detail-body">
+                                <span class="badge" id="res-cancha-badge">FUTBOL</span>
+                                <h2 id="res-cancha-nombre">Cargando...</h2>
+                                <p id="res-cancha-desc" class="text-muted"></p>
+                                
+                                <div class="detail-specs">
+                                    <div class="spec-item">
+                                        <i class="fa-solid fa-layer-group"></i>
+                                        <div><span>Superficie</span><b id="res-cancha-superficie">-</b></div>
+                                    </div>
+                                    <div class="spec-item">
+                                        <i class="fa-solid fa-users"></i>
+                                        <div><span>Aforo</span><b id="res-cancha-aforo">-</b></div>
+                                    </div>
+                                    <div class="spec-item">
+                                        <i class="fa-solid fa-lightbulb"></i>
+                                        <div><span>Iluminación</span><b id="res-cancha-luz">-</b></div>
+                                    </div>
+                                    <div class="spec-item">
+                                        <i class="fa-solid fa-tag"></i>
+                                        <div><span>Tarifa / Hora</span><b id="res-cancha-precio" class="text-primary">-</b></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Selector de Fecha -->
+                        <div class="date-picker-card">
+                            <label for="fecha-reserva"><i class="fa-solid fa-calendar-day"></i> Selecciona la Fecha del Partido:</label>
+                            <input type="date" id="fecha-reserva" onchange="app.onFechaChange()">
+                            <small class="helper-text"><i class="fa-solid fa-circle-info"></i> No se permiten fechas pasadas (HU-08).</small>
+                        </div>
+                    </div>
+
+                    <!-- Panel Derecho: Matriz de Franjas y Panel de Confirmación -->
+                    <div class="reserva-matrix-panel">
+                        <div class="matrix-card">
+                            <div class="matrix-header">
+                                <div>
+                                    <h3>Franjas Horarias Disponibles</h3>
+                                    <p class="text-muted" id="matrix-fecha-subtitle">Selecciona una hora para apartar tu cupo</p>
+                                </div>
+                                <!-- Leyenda de Estados por Color -->
+                                <div class="matrix-legend">
+                                    <span class="legend-item"><span class="legend-dot dot-libre"></span> Libre</span>
+                                    <span class="legend-item"><span class="legend-dot dot-ocupada"></span> Ocupada</span>
+                                    <span class="legend-item"><span class="legend-dot dot-seleccionada"></span> Tu Selección</span>
+                                </div>
+                            </div>
+
+                            <div id="franjas-grid" class="franjas-grid">
+                                <!-- Botones de franja horaria inyectados dinámicamente -->
+                            </div>
+
+                            <!-- Panel de Confirmación Anti-Colisión (WF-02) -->
+                            <div id="panel-confirmacion" class="confirmacion-box" style="display: none;">
+                                <div class="confirm-content">
+                                    <div class="confirm-info">
+                                        <span class="confirm-tag"><i class="fa-solid fa-shield-check"></i> Validación Anti-Overbooking Activa</span>
+                                        <h4>Resumen de tu Reserva</h4>
+                                        <p id="confirm-resumen">Cancha Sintética 1 - 18:00 a 19:00</p>
+                                        <div class="confirm-price">Total a Pagar: <b id="confirm-precio">$85.000 COP</b></div>
+                                    </div>
+                                    <button class="btn btn-success btn-lg" id="btn-confirmar-reserva" onclick="app.ejecutarReserva()">
+                                        <i class="fa-solid fa-check-circle"></i> Confirmar Reserva Inmediata
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SECCIÓN 3: WF-03 MIS RESERVAS -->
+        <!-- ========================================== -->
+        <section id="section-mis-reservas" class="content-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <div>
+                        <h2>Mis Reservas <span class="badge badge-primary" id="badge-total-reservas">0</span></h2>
+                        <p class="text-muted">Consulta tu historial de reservas y gestiona cancelaciones con liberación inmediata de cupo.</p>
+                    </div>
+                </div>
+
+                <div id="mis-reservas-grid" class="reservas-grid">
+                    <!-- Reservas inyectadas dinámicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SECCIÓN 4: PANEL DE ADMINISTRACIÓN -->
+        <!-- ========================================== -->
+        <section id="section-admin" class="content-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <div>
+                        <h2>Panel de Gestión de Escenarios (Administrador)</h2>
+                        <p class="text-muted">Control de escenarios deportivos, franjas horarias y estado de mantenimiento (HU-01, HU-02, HU-03, HU-04, HU-21).</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="app.openModalCrearEscenario()">
+                        <i class="fa-solid fa-plus"></i> Registrar Nuevo Escenario
+                    </button>
+                </div>
+
+                <!-- Tabla de Escenarios Admin -->
+                <div class="table-card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Escenario</th>
+                                <th>Disciplina</th>
+                                <th>Superficie</th>
+                                <th>Aforo</th>
+                                <th>Tarifa/h</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-escenarios-tbody">
+                            <!-- Inyectado por app.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- MODAL DE AUTENTICACIÓN (LOGIN / REGISTRO) -->
+    <!-- ========================================== -->
+    <div id="modal-auth" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <button class="modal-close" onclick="app.closeModal('modal-auth')">&times;</button>
+            <div class="modal-header">
+                <div class="logo-icon small"><i class="fa-solid fa-user-lock"></i></div>
+                <h3 id="auth-modal-title">Iniciar Sesión</h3>
+                <p class="text-muted" id="auth-modal-subtitle">Accede para reservar escenarios deportivos</p>
+            </div>
+
+            <!-- Formulario Login -->
+            <form id="form-login" onsubmit="app.handleLogin(event)">
+                <div class="form-group">
+                    <label><i class="fa-solid fa-envelope"></i> Correo Electrónico</label>
+                    <input type="email" id="login-email" required placeholder="ejemplo@javeriana.edu.co">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-lock"></i> Contraseña</label>
+                    <input type="password" id="login-password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block btn-lg">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Iniciar Sesión
+                </button>
+                <div class="modal-footer-text">
+                    ¿No tienes cuenta? <a href="#" onclick="app.switchAuthMode('register')">Regístrate aquí</a>
+                </div>
+                <!-- Cuentas de demostración rápida para evaluación -->
+                <div class="demo-accounts-box">
+                    <span><b>Credenciales Demo para Evaluación:</b></span>
+                    <div class="demo-pills">
+                        <button type="button" class="btn-demo" onclick="app.fillDemo('admin@javeriana.edu.co', 'admin123')">
+                            Admin (admin@javeriana.edu.co)
+                        </button>
+                        <button type="button" class="btn-demo" onclick="app.fillDemo('nicolas.cardozo@javeriana.edu.co', 'user123')">
+                            Deportista (nicolas.cardozo@javeriana.edu.co)
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Formulario Registro -->
+            <form id="form-register" onsubmit="app.handleRegister(event)" style="display: none;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" id="reg-nombre" required placeholder="Juan">
+                    </div>
+                    <div class="form-group">
+                        <label>Apellido</label>
+                        <input type="text" id="reg-apellido" required placeholder="Pérez">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Correo Electrónico</label>
+                    <input type="email" id="reg-email" required placeholder="juan.perez@javeriana.edu.co">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="tel" id="reg-telefono" placeholder="3001234567">
+                    </div>
+                    <div class="form-group">
+                        <label>Rol</label>
+                        <select id="reg-rol">
+                            <option value="ROLE_USER">Deportista (Usuario)</option>
+                            <option value="ROLE_ADMIN">Administrador</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="reg-password" required minlength="6" placeholder="Mínimo 6 caracteres">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block btn-lg">
+                    <i class="fa-solid fa-user-plus"></i> Crear Cuenta
+                </button>
+                <div class="modal-footer-text">
+                    ¿Ya tienes cuenta? <a href="#" onclick="app.switchAuthMode('login')">Inicia sesión</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL CREAR / EDITAR ESCENARIO -->
+    <!-- ========================================== -->
+    <div id="modal-escenario" class="modal-overlay" style="display: none;">
+        <div class="modal-box modal-lg">
+            <button class="modal-close" onclick="app.closeModal('modal-escenario')">&times;</button>
+            <div class="modal-header">
+                <h3 id="modal-escenario-title">Registrar Nuevo Escenario</h3>
+                <p class="text-muted">Ingresa los datos técnicos y comerciales de la cancha deportiva.</p>
+            </div>
+            <form id="form-escenario" onsubmit="app.guardarEscenario(event)">
+                <input type="hidden" id="esc-id">
+                <div class="form-row">
+                    <div class="form-group flex-2">
+                        <label>Nombre del Escenario</label>
+                        <input type="text" id="esc-nombre" required placeholder="Ej. Cancha Sintética 2">
+                    </div>
+                    <div class="form-group">
+                        <label>Disciplina</label>
+                        <select id="esc-disciplina" required>
+                            <option value="FUTBOL">Fútbol</option>
+                            <option value="TENIS">Tenis</option>
+                            <option value="PADEL">Pádel</option>
+                            <option value="BALONCESTO">Baloncesto</option>
+                            <option value="VOLEIBOL">Voleibol</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Superficie</label>
+                        <select id="esc-superficie" required>
+                            <option value="SINTETICA">Sintética</option>
+                            <option value="NATURAL">Natural</option>
+                            <option value="ARCILLA">Polvo de Ladrillo (Arcilla)</option>
+                            <option value="PARQUET">Madera Parquet</option>
+                            <option value="DURA">Pista Dura</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Aforo (Personas)</label>
+                        <input type="number" id="esc-aforo" required min="1" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label>Tarifa por Hora (COP)</label>
+                        <input type="number" id="esc-tarifa" required min="1000" step="1000" value="80000">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>URL de Imagen</label>
+                    <input type="url" id="esc-imagen" placeholder="https://ejemplo.com/cancha.jpg">
+                </div>
+
+                <div class="form-group">
+                    <label>Descripción de Instalaciones</label>
+                    <textarea id="esc-desc" rows="3" placeholder="Detalles de la cancha, iluminación, drenaje..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="esc-luz" checked>
+                        <label for="esc-luz">Iluminación Nocturna Disponible</label>
+                    </div>
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="esc-mantenimiento">
+                        <label for="esc-mantenimiento">En Mantenimiento (Bloquea Reservas)</label>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="app.closeModal('modal-escenario')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Guardar Escenario</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL CONFIRMAR CANCELACIÓN (WF-03) -->
+    <!-- ========================================== -->
+    <div id="modal-cancelar" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <button class="modal-close" onclick="app.closeModal('modal-cancelar')">&times;</button>
+            <div class="modal-header">
+                <div class="logo-icon small alert"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <h3>¿Confirmar Cancelación?</h3>
+                <p class="text-muted">Al cancelar, la franja horaria se liberará de inmediato para otros deportistas (HU-06).</p>
+            </div>
+            <input type="hidden" id="cancel-reserva-id">
+            <div class="form-group">
+                <label>Motivo de Cancelación (Opcional)</label>
+                <input type="text" id="cancel-motivo" placeholder="Ej. Lluvia, imprevisto personal...">
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-outline" onclick="app.closeModal('modal-cancelar')">No cancelar</button>
+                <button type="button" class="btn btn-danger" onclick="app.ejecutarCancelacion()">
+                    <i class="fa-solid fa-ban"></i> Sí, Cancelar Reserva
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts de la Aplicación -->
+    <script src="app.js"></script>
+</body>
+</html>
