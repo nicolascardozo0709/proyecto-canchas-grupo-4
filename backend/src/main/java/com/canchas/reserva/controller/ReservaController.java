@@ -79,9 +79,13 @@ public class ReservaController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Obtener el detalle de una reserva por su ID")
-    public ResponseEntity<ReservaResponse> obtenerPorId(@PathVariable Long id) {
-        ReservaResponse reserva = reservaService.obtenerPorId(id);
+    @Operation(summary = "Obtener el detalle de una reserva por su ID (Propia o Administrador)")
+    public ResponseEntity<ReservaResponse> obtenerPorId(
+        @PathVariable Long id,
+        @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        boolean esAdmin = userDetails.getUsuario().getRol() == Rol.ROLE_ADMIN;
+        ReservaResponse reserva = reservaService.obtenerPorId(id, userDetails.getId(), esAdmin);
         return ResponseEntity.ok(reserva);
     }
 }

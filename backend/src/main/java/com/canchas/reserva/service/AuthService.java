@@ -45,7 +45,7 @@ public class AuthService {
             request.getEmail(),
             passwordEncoder.encode(request.getPassword()),
             request.getTelefono(),
-            request.getRol() != null ? request.getRol() : Rol.ROLE_USER
+            Rol.ROLE_USER // Seguridad estricta: Todo autoregistro asigna inmutablemente Rol.ROLE_USER
         );
 
         Usuario guardado = usuarioRepository.save(usuario);

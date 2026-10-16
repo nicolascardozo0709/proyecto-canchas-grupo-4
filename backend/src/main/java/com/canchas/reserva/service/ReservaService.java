@@ -207,6 +207,18 @@ public class ReservaService {
     }
 
     @Transactional(readOnly = true)
+    public ReservaResponse obtenerPorId(Long reservaId, Long usuarioId, boolean esAdmin) {
+        Reserva reserva = reservaRepository.findById(reservaId)
+            .orElseThrow(() -> new ResourceNotFoundException("Reserva no encontrada con ID: " + reservaId));
+
+        if (!esAdmin && !reserva.getUsuario().getId().equals(usuarioId)) {
+            throw new UnauthorizedAccessException("Acceso denegado: No tiene autorización para consultar reservas de otros usuarios.");
+        }
+
+        return mapToResponse(reserva);
+    }
+
+    @Transactional(readOnly = true)
     public ReservaResponse obtenerPorId(Long reservaId) {
         Reserva reserva = reservaRepository.findById(reservaId)
             .orElseThrow(() -> new ResourceNotFoundException("Reserva no encontrada con ID: " + reservaId));

@@ -3,6 +3,16 @@
  * Implementa los flujos interactivos de los Wireframes WF-01, WF-02, WF-03 y Panel de Admin
  */
 
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 const API_BASE = '/api';
 
 const app = {
@@ -54,7 +64,7 @@ const app = {
                 <div style="display:flex; align-items:center; gap:10px;">
                     <div style="text-align:right;">
                         <div style="font-weight:700; font-size:0.88rem; ${esAdmin ? 'color:#d97706;' : ''}">
-                            ${esAdmin ? '<i class="fa-solid fa-crown"></i> ' : ''}${this.user.nombre} ${this.user.apellido}
+                            ${esAdmin ? '<i class="fa-solid fa-crown"></i> ' : ''}${escapeHtml(this.user.nombre)} ${escapeHtml(this.user.apellido)}
                         </div>
                         <span class="badge ${esAdmin ? 'badge-mantenimiento' : 'badge-primary'}" style="position:static; font-size:0.65rem; ${esAdmin ? 'background:#f59e0b; color:#0f172a; font-weight:800;' : ''}">
                             ${esAdmin ? 'ADMINISTRADOR CAMPUS' : 'DEPORTISTA'}
@@ -271,24 +281,24 @@ const app = {
             return `
                 <div class="cancha-card">
                     <div class="card-image-box">
-                        <img src="${esc.imagenUrl || 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=800'}" alt="${esc.nombre}">
-                        <span class="badge badge-tag">${esc.disciplina}</span>
+                        <img src="${escapeHtml(esc.imagenUrl) || 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=800'}" alt="${escapeHtml(esc.nombre)}">
+                        <span class="badge badge-tag">${escapeHtml(esc.disciplina)}</span>
                         ${enMantenimiento ? '<span class="badge badge-mantenimiento"><i class="fa-solid fa-wrench"></i> MANTENIMIENTO</span>' : ''}
                     </div>
                     <div class="card-body">
-                        <h3 class="card-title">${esc.nombre}</h3>
-                        <p class="card-desc">${esc.descripcion || 'Escenario deportivo equipado con especificaciones de alto nivel.'}</p>
+                        <h3 class="card-title">${escapeHtml(esc.nombre)}</h3>
+                        <p class="card-desc">${escapeHtml(esc.descripcion || 'Escenario deportivo equipado con especificaciones de alto nivel.')}</p>
                         
                         <div class="card-features">
                             <div class="feature-pill">
                                 <i class="fa-solid fa-layer-group"></i>
                                 <span>Superficie</span>
-                                <b>${esc.superficie}</b>
+                                <b>${escapeHtml(esc.superficie)}</b>
                             </div>
                             <div class="feature-pill">
                                 <i class="fa-solid fa-users"></i>
                                 <span>Aforo</span>
-                                <b>${esc.aforo} pers.</b>
+                                <b>${escapeHtml(esc.aforo)} pers.</b>
                             </div>
                             <div class="feature-pill">
                                 <i class="fa-solid fa-lightbulb"></i>
@@ -510,18 +520,18 @@ const app = {
                 return `
                     <div class="reserva-card">
                         <div class="reserva-card-header">
-                            <span class="reserva-codigo"><i class="fa-solid fa-ticket"></i> ${r.codigoReserva}</span>
+                            <span class="reserva-codigo"><i class="fa-solid fa-ticket"></i> ${escapeHtml(r.codigoReserva)}</span>
                             <span class="badge ${esConfirmada ? 'badge-primary' : 'badge-mantenimiento'}">
-                                ${r.estado}
+                                ${escapeHtml(r.estado)}
                             </span>
                         </div>
                         <div class="reserva-body">
-                            <h4>${r.escenarioNombre}</h4>
+                            <h4>${escapeHtml(r.escenarioNombre)}</h4>
                             <div class="reserva-meta">
-                                <div><i class="fa-solid fa-trophy"></i> Disciplina: <b>${r.disciplina}</b></div>
-                                <div><i class="fa-solid fa-calendar-days"></i> Fecha del Partido: <b>${r.fecha}</b></div>
-                                <div><i class="fa-solid fa-clock"></i> Horario: <b>${r.horaInicio} - ${r.horaFin}</b></div>
-                                ${!esConfirmada && r.motivoCancelacion ? `<div><i class="fa-solid fa-circle-exclamation"></i> Motivo: <i>${r.motivoCancelacion}</i></div>` : ''}
+                                <div><i class="fa-solid fa-trophy"></i> Disciplina: <b>${escapeHtml(r.disciplina)}</b></div>
+                                <div><i class="fa-solid fa-calendar-days"></i> Fecha del Partido: <b>${escapeHtml(r.fecha)}</b></div>
+                                <div><i class="fa-solid fa-clock"></i> Horario: <b>${escapeHtml(r.horaInicio)} - ${escapeHtml(r.horaFin)}</b></div>
+                                ${!esConfirmada && r.motivoCancelacion ? `<div><i class="fa-solid fa-circle-exclamation"></i> Motivo: <i>${escapeHtml(r.motivoCancelacion)}</i></div>` : ''}
                             </div>
                         </div>
                         <div class="reserva-footer">
@@ -587,10 +597,10 @@ const app = {
                 return `
                     <tr>
                         <td><b>#${esc.id}</b></td>
-                        <td><b>${esc.nombre}</b></td>
-                        <td><span class="badge badge-tag" style="position:static;">${esc.disciplina}</span></td>
-                        <td>${esc.superficie}</td>
-                        <td>${esc.aforo} pers.</td>
+                        <td><b>${escapeHtml(esc.nombre)}</b></td>
+                        <td><span class="badge badge-tag" style="position:static;">${escapeHtml(esc.disciplina)}</span></td>
+                        <td>${escapeHtml(esc.superficie)}</td>
+                        <td>${escapeHtml(esc.aforo)} pers.</td>
                         <td>${precio}</td>
                         <td>
                             <span class="badge ${esc.enMantenimiento ? 'badge-mantenimiento' : 'badge-primary'}" style="position:static;">
@@ -687,18 +697,18 @@ const app = {
 
                 return `
                     <tr>
-                        <td><code style="color:var(--accent); font-weight:700;">${r.codigoReserva}</code></td>
+                        <td><code style="color:var(--accent); font-weight:700;">${escapeHtml(r.codigoReserva)}</code></td>
                         <td>
-                            <b>${usuarioNombre}</b>
-                            <div style="font-size:0.75rem; color:var(--text-muted);">${usuarioEmail}</div>
+                            <b>${escapeHtml(usuarioNombre)}</b>
+                            <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(usuarioEmail)}</div>
                         </td>
-                        <td>${r.escenarioNombre}</td>
-                        <td>${r.fecha}</td>
-                        <td><b>${r.horaInicio} - ${r.horaFin}</b></td>
+                        <td>${escapeHtml(r.escenarioNombre)}</td>
+                        <td>${escapeHtml(r.fecha)}</td>
+                        <td><b>${escapeHtml(r.horaInicio)} - ${escapeHtml(r.horaFin)}</b></td>
                         <td style="font-weight:700; color:var(--primary-dark);">${totalFormatted}</td>
                         <td>
                             <span class="badge ${esConfirmada ? 'badge-primary' : 'badge-mantenimiento'}" style="position:static;">
-                                ${r.estado}
+                                ${escapeHtml(r.estado)}
                             </span>
                         </td>
                         <td>
@@ -707,7 +717,7 @@ const app = {
                                     <i class="fa-solid fa-ban"></i> Cancelar
                                 </button>
                             ` : `
-                                <span style="font-size:0.75rem; color:var(--text-muted);">${r.motivoCancelacion || 'Cancelada'}</span>
+                                <span style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(r.motivoCancelacion || 'Cancelada')}</span>
                             `}
                         </td>
                     </tr>
@@ -861,7 +871,7 @@ const app = {
         toast.className = `toast toast-${type}`;
         
         const icon = type === 'success' ? 'fa-circle-check' : (type === 'error' ? 'fa-circle-xmark' : 'fa-circle-info');
-        toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
+        toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${escapeHtml(message)}</span>`;
         
         container.appendChild(toast);
         setTimeout(() => {

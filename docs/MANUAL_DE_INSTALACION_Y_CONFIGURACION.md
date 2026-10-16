@@ -111,11 +111,11 @@ El sistema inicializa automáticamente las siguientes cuentas con contraseñas c
 
 | Rol | Correo Electrónico | Contraseña | Permisos y Capacidades |
 |---|---|---|---|
-| **Administrador** | `admin@javeriana.edu.co` | `admin123` | CRUD de canchas, creación de franjas, alternar estado de mantenimiento (HU-21), ver todas las reservas. |
-| **Deportista 1 (Nicolás Cardozo Mejía)** | `nicolas.cardozo@javeriana.edu.co` | `user123` | Explorar catálogo, consultar matriz de disponibilidad, crear reservas, cancelar. |
-| **Deportista 2 (Samuel Correa)** | `samuel.correa@javeriana.edu.co` | `user123` | Pruebas de concurrencia y validación anti-overbooking simultánea. |
-| **Deportista 3 (Nicolás Espinosa Soler)** | `nicolas.espinosa@javeriana.edu.co` | `user123` | Pruebas de flujo de reservas y consulta de historial propio (HU-15). |
-| **Deportista 4 (Gustavo Mejía)** | `gustavo.mejia@javeriana.edu.co` | `user123` | Pruebas de validación de horarios y autogestión de perfil. |
+| **Administrador** | `admin@canchas.com` | `admin123` | CRUD de canchas, creación de franjas, alternar estado de mantenimiento (HU-21), ver todas las reservas. |
+| **Deportista 1 (Nicolás Cardozo Mejía)** | `nicolas@canchas.com` | `user123` | Explorar catálogo, consultar matriz de disponibilidad, crear reservas, cancelar. |
+| **Deportista 2 (Samuel Correa)** | `samuel@canchas.com` | `user123` | Pruebas de concurrencia y validación anti-overbooking simultánea. |
+| **Deportista 3 (Nicolás Espinosa Soler)** | `espinosa@canchas.com` | `user123` | Pruebas de flujo de reservas y consulta de historial propio (HU-15). |
+| **Deportista 4 (Gustavo Mejía)** | `gustavo@canchas.com` | `user123` | Pruebas de validación de horarios y autogestión de perfil. |
 
 *Nota: Todos los integrantes cuentan con botones de auto-completado directo en el modal de inicio de sesión de la aplicación web.*
 
@@ -123,7 +123,7 @@ El sistema inicializa automáticamente las siguientes cuentas con contraseñas c
 
 ## 5. Ejecución de la Suite de Pruebas Automatizadas
 
-Para validar las 19 pruebas unitarias, de integración y concurrencia multihilo:
+Para validar las 23 pruebas unitarias, de integración, seguridad/CORS y concurrencia multihilo:
 
 ```cmd
 cd backend

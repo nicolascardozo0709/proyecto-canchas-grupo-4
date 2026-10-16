@@ -169,8 +169,8 @@ Para demostrar de forma irrefutable el cumplimiento de **RNF-02 (Prevención de 
    - **Swagger UI:** `http://localhost:8080/swagger-ui.html`
    - **Consola H2:** `http://localhost:8080/h2-console` (JDBC URL: `jdbc:h2:mem:canchasdb`)
 4. **Credenciales Demo Precargadas:**
-   - Administrador: `admin@javeriana.edu.co` / `admin123`
-   - Deportista: `nicolas.cardozo@javeriana.edu.co` / `user123`
+   - Administrador: `admin@canchas.com` / `admin123`
+   - Deportista: `nicolas@canchas.com` / `user123`
 
 ---
 
