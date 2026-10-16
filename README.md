@@ -85,4 +85,4 @@ Todos los informes y manuales se encuentran disponibles en la carpeta `docs/`:
 
 ##
 Verificado por Nicolás Espinosa
-
+Gustavo Mejia
