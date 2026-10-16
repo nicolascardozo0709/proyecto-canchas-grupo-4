@@ -81,3 +81,7 @@ Todos los informes y manuales se encuentran disponibles en la carpeta `docs/`:
 5. [Reporte de Pruebas Automatizadas y Cobertura](docs/REPORTE_DE_PRUEBAS_Y_COBERTURA.md)
 6. [Registro de GitFlow y Pull Requests](docs/GITFLOW_Y_PULL_REQUESTS.md)
 7. [Colección de Postman v2.1.0](docs/ReservaCanchas_Postman_Collection.json)
+
+
+##
+Verificado por Nicolás Espinosa
