@@ -53,10 +53,11 @@ Thumbs.db
 Desktop.ini
 .DS_Store
 
-# Local Binaries and Tools
+# Local Binaries, Data and Tools
 tools/
 backend/tools/
+backend/data/
+data/
 *.lock.db
 URL_PUBLICA_ACTIVA.txt
 backend/URL_PUBLICA_ACTIVA.txt
-

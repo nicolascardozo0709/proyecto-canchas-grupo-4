@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
-import java.util.List;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -35,12 +34,10 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // En perfil de producción (prod), no se crean credenciales por defecto con contraseñas conocidas
         if (environment.acceptsProfiles(org.springframework.core.env.Profiles.of("prod"))) {
             return;
         }
 
-        // Inicializar Usuarios para roles del sistema y compañeros del equipo
         crearUsuarioSiNoExiste("Administrador", "Sistema", "admin@canchas.com", "admin123", "3001234567", Rol.ROLE_ADMIN);
         crearUsuarioSiNoExiste("Usuario", "Deportista", "usuario@canchas.com", "user123", "3109876543", Rol.ROLE_USER);
         crearUsuarioSiNoExiste("Nicolás", "Cardozo", "nicolas@canchas.com", "user123", "3109876543", Rol.ROLE_USER);
@@ -48,7 +45,6 @@ public class DataInitializer implements CommandLineRunner {
         crearUsuarioSiNoExiste("Nicolás", "Espinosa", "espinosa@canchas.com", "user123", "3114445566", Rol.ROLE_USER);
         crearUsuarioSiNoExiste("Gustavo", "Mejía", "gustavo@canchas.com", "user123", "3158889900", Rol.ROLE_USER);
 
-        // Inicializar Escenarios y Franjas Horarias si no existen
         if (escenarioRepository.count() == 0) {
             Escenario futbol8 = new Escenario(
                 "Cancha Sintética 1 - El Campincito",
@@ -59,7 +55,7 @@ public class DataInitializer implements CommandLineRunner {
                 BigDecimal.valueOf(85000.00),
                 false,
                 "Cancha de fútbol 8 con grama sintética de última generación e iluminación LED para partidos nocturnos.",
-                "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&auto=format&fit=crop"
+                "/futbol8.jpg"
             );
             futbol8 = escenarioRepository.save(futbol8);
             crearFranjasEstandar(futbol8, 6, 22);
@@ -73,7 +69,7 @@ public class DataInitializer implements CommandLineRunner {
                 BigDecimal.valueOf(60000.00),
                 false,
                 "Cancha reglamentaria en polvo de ladrillo (arcilla roja), drenaje rápido y gradería lateral.",
-                "https://images.unsplash.com/photo-1558365849-6ebd8b0454b2?w=800&auto=format&fit=crop"
+                "/tenis.jpg"
             );
             tenis = escenarioRepository.save(tenis);
             crearFranjasEstandar(tenis, 6, 20);
@@ -101,7 +97,7 @@ public class DataInitializer implements CommandLineRunner {
                 BigDecimal.valueOf(90000.00),
                 false,
                 "Tablón de madera parquet de alto impacto con tableros de cristal retráctiles y sonido ambiental.",
-                "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&auto=format&fit=crop"
+                "/coliseo.jpg"
             );
             coliseo = escenarioRepository.save(coliseo);
             crearFranjasEstandar(coliseo, 8, 21);
@@ -115,16 +111,23 @@ public class DataInitializer implements CommandLineRunner {
                 BigDecimal.valueOf(130000.00),
                 false,
                 "Campo reglamentario de grama natural bermuda con sistema de drenaje tecnificado.",
-                "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=800&auto=format&fit=crop"
+                "/futbol11.jpg"
             );
             futbol11 = escenarioRepository.save(futbol11);
             crearFranjasEstandar(futbol11, 7, 19);
         }
 
-        // Asegurar que la imagen del pádel esté siempre sincronizada con la fotografía oficial
+        // Sincronizar imágenes locales de alta resolución en todos los escenarios existentes
         escenarioRepository.findAll().forEach(e -> {
-            if (e.getDisciplina() == Disciplina.PADEL && !"/padel.png".equals(e.getImagenUrl())) {
-                e.setImagenUrl("/padel.png");
+            String nuevaImg = null;
+            if (e.getDisciplina() == Disciplina.PADEL) nuevaImg = "/padel.png";
+            else if (e.getDisciplina() == Disciplina.TENIS) nuevaImg = "/tenis.jpg";
+            else if (e.getDisciplina() == Disciplina.BALONCESTO) nuevaImg = "/coliseo.jpg";
+            else if (e.getDisciplina() == Disciplina.FUTBOL) {
+                nuevaImg = (e.getNombre() != null && e.getNombre().contains("11")) ? "/futbol11.jpg" : "/futbol8.jpg";
+            }
+            if (nuevaImg != null && !nuevaImg.equals(e.getImagenUrl())) {
+                e.setImagenUrl(nuevaImg);
                 escenarioRepository.save(e);
             }
         });

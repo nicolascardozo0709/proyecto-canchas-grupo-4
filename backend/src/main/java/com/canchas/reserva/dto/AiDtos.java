@@ -5,9 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-/**
- * Data Transfer Objects (DTO) para la interacción con el Asistente Deportivo Inteligente (Gemini AI).
- */
 public class AiDtos {
 
     public static class ChatRequest {
@@ -29,21 +26,31 @@ public class AiDtos {
     }
 
     public static class ChatMessage {
-        private String remitente; // "USER" o "BOT"
+        private String remitente;
         private String texto;
+        private String role;
+        private String content;
 
         public ChatMessage() {}
 
         public ChatMessage(String remitente, String texto) {
             this.remitente = remitente;
             this.texto = texto;
+            this.role = remitente;
+            this.content = texto;
         }
 
-        public String getRemitente() { return remitente; }
+        public String getRemitente() { return remitente != null ? remitente : role; }
         public void setRemitente(String remitente) { this.remitente = remitente; }
 
-        public String getTexto() { return texto; }
+        public String getTexto() { return texto != null ? texto : content; }
         public void setTexto(String texto) { this.texto = texto; }
+
+        public String getRole() { return role != null ? role : remitente; }
+        public void setRole(String role) { this.role = role; }
+
+        public String getContent() { return content != null ? content : texto; }
+        public void setContent(String content) { this.content = content; }
     }
 
     public static class ChatResponse {
@@ -79,6 +86,7 @@ public class AiDtos {
         private LocalDate fecha;
         private BigDecimal precio;
         private String superficie;
+        private boolean sugerenciaListaParaConfirmar = true;
 
         public PropuestaReserva() {}
 
@@ -94,6 +102,7 @@ public class AiDtos {
             this.fecha = fecha;
             this.precio = precio;
             this.superficie = superficie;
+            this.sugerenciaListaParaConfirmar = true;
         }
 
         public Long getEscenarioId() { return escenarioId; }
@@ -120,7 +129,14 @@ public class AiDtos {
         public BigDecimal getPrecio() { return precio; }
         public void setPrecio(BigDecimal precio) { this.precio = precio; }
 
+        public BigDecimal getPrecioTotal() { return precio; }
+
         public String getSuperficie() { return superficie; }
         public void setSuperficie(String superficie) { this.superficie = superficie; }
+
+        public boolean isSugerenciaListaParaConfirmar() { return sugerenciaListaParaConfirmar; }
+        public void setSugerenciaListaParaConfirmar(boolean sugerenciaListaParaConfirmar) {
+            this.sugerenciaListaParaConfirmar = sugerenciaListaParaConfirmar;
+        }
     }
 }

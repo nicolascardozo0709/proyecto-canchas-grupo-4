@@ -25,12 +25,131 @@ const app = {
     filtroDisciplina: '',
     chatIaOpen: false,
     chatIaHistory: [],
+    pendingManualReserva: false,
+    pendingAiReserva: null,
+    currentCampusSlide: 0,
+    campusTimer: null,
+    campusSlides: [
+        {
+            badge: 'VISTA GENERAL DEL CAMPUS',
+            title: 'Centro Javeriano de Formación Deportiva',
+            desc: 'Recorre nuestro complejo deportivo universitario y reserva tu escenario reglamentario en segundos.',
+            image: '/campus-javeriana.jpg',
+            label: 'Campus General',
+            sub: 'Vista Aérea',
+            icon: 'fa-building-columns',
+            panPos: '15% 50%'
+        },
+        {
+            badge: 'FÚTBOL 8 SINTÉTICO',
+            title: 'Cancha Sintética 1 - El Campincito',
+            desc: 'Grama sintética monofilamento de última generación con drenaje pluvial e iluminación LED nocturna.',
+            image: '/futbol8.jpg',
+            label: 'El Campincito',
+            sub: 'Fútbol 8 • $120.000/h',
+            icon: 'fa-futbol',
+            panPos: '35% 50%'
+        },
+        {
+            badge: 'TENIS DE CAMPO',
+            title: 'Cancha Central de Tenis - Polvo de Ladrillo',
+            desc: 'Superficie de arcilla reglamentaria con graderías cubiertas y reflectores profesionales.',
+            image: '/tenis.jpg',
+            label: 'Cancha de Tenis',
+            sub: 'Arcilla • $65.000/h',
+            icon: 'fa-table-tennis-paddle-ball',
+            panPos: '55% 50%'
+        },
+        {
+            badge: 'PÁDEL PANORÁMICO',
+            title: 'Cancha de Pádel Panorámica 1',
+            desc: 'Cerramiento en cristal templado de 12mm y césped fibrilado azul de alto agarre.',
+            image: '/padel.png',
+            label: 'Pádel Cristal',
+            sub: 'Pádel • $90.000/h',
+            icon: 'fa-baseball',
+            panPos: '75% 50%'
+        },
+        {
+            badge: 'COLISEO Y ESTADIO',
+            title: 'Coliseo Cubierto & Estadio Fútbol 11',
+            desc: 'Maderamen flotante certificado FIBA para baloncesto/voleibol y grama natural Bermuda para torneos.',
+            image: '/coliseo.jpg',
+            label: 'Coliseo & Estadio',
+            sub: 'Multideporte • $150.000/h',
+            icon: 'fa-basketball',
+            panPos: '95% 50%'
+        }
+    ],
 
     scrollToCatalogo() {
         const target = document.getElementById('catalogo-anchor');
         if (target) {
             target.scrollIntoView({ behavior: 'smooth' });
         }
+    },
+
+    initCampusTour() {
+        this.renderCampusTourStops();
+        this.setCampusSlide(0, false);
+        if (this.campusTimer) clearInterval(this.campusTimer);
+        this.campusTimer = setInterval(() => {
+            this.nextCampusSlide(false);
+        }, 5500);
+    },
+
+    renderCampusTourStops() {
+        const container = document.getElementById('campus-tour-stops');
+        if (!container) return;
+        container.innerHTML = this.campusSlides.map((s, idx) => `
+            <div class="campus-stop-card ${idx === this.currentCampusSlide ? 'active' : ''}" onclick="app.setCampusSlide(${idx}, true)">
+                <div class="campus-stop-icon"><i class="fa-solid ${s.icon}"></i></div>
+                <div class="campus-stop-info">
+                    <span class="campus-stop-name">${escapeHtml(s.label)}</span>
+                    <span class="campus-stop-sub">${escapeHtml(s.sub)}</span>
+                </div>
+            </div>
+        `).join('');
+    },
+
+    setCampusSlide(idx, manual = false) {
+        if (idx < 0) idx = this.campusSlides.length - 1;
+        if (idx >= this.campusSlides.length) idx = 0;
+        this.currentCampusSlide = idx;
+
+        const slide = this.campusSlides[idx];
+        const bgEl = document.getElementById('campus-pan-bg');
+        const badgeEl = document.getElementById('campus-slide-badge');
+        const titleEl = document.getElementById('campus-slide-title');
+        const descEl = document.getElementById('campus-slide-desc');
+
+        if (bgEl) {
+            bgEl.style.backgroundImage = `url('${slide.image}')`;
+            bgEl.style.backgroundPosition = slide.panPos;
+        }
+        if (badgeEl) badgeEl.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${escapeHtml(slide.badge)}`;
+        if (titleEl) titleEl.textContent = slide.title;
+        if (descEl) descEl.textContent = slide.desc;
+
+        document.querySelectorAll('.campus-stop-card').forEach((card, i) => {
+            if (i === idx) card.classList.add('active');
+            else card.classList.remove('active');
+        });
+
+        if (manual && this.campusTimer) {
+            clearInterval(this.campusTimer);
+            this.campusTimer = setInterval(() => {
+                this.nextCampusSlide(false);
+            }, 6500);
+        }
+    },
+
+    nextCampusSlide(manual = true) {
+        this.setCampusSlide(this.currentCampusSlide + 1, manual);
+    },
+
+    prevCampusSlide(manual = true) {
+        this.setCampusSlide(this.currentCampusSlide - 1, manual);
     },
 
     init() {
@@ -40,6 +159,7 @@ const app = {
         this.token = null;
         this.user = null;
 
+        this.initCampusTour();
         this.updateNavUser();
         this.cargarEscenarios();
         if (this.token) {
@@ -133,8 +253,25 @@ const app = {
         document.getElementById('login-password').value = pass;
     },
 
+    async loginDirectoDemo(email, pass) {
+        document.getElementById('login-email').value = email;
+        document.getElementById('login-password').value = pass;
+        await this.handleLogin({ preventDefault: () => {} });
+    },
+
+    async procesarReservaPendientePostLogin() {
+        if (this.pendingManualReserva) {
+            this.pendingManualReserva = false;
+            await this.ejecutarReserva();
+        } else if (this.pendingAiReserva) {
+            const p = this.pendingAiReserva;
+            this.pendingAiReserva = null;
+            await this.confirmarReservaIa(p.escenarioId, p.franjaId, p.fecha);
+        }
+    },
+
     async handleLogin(e) {
-        e.preventDefault();
+        if (e && e.preventDefault) e.preventDefault();
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
 
@@ -163,6 +300,7 @@ const app = {
             this.updateNavUser();
             this.cargarMisReservas();
             this.showToast(`¡Bienvenido, ${this.user.nombre}!`, 'success');
+            await this.procesarReservaPendientePostLogin();
         } catch (err) {
             this.showToast(err.message, 'error');
         }
@@ -203,6 +341,7 @@ const app = {
             this.closeModal('modal-auth');
             this.updateNavUser();
             this.showToast('¡Cuenta creada y autenticada con éxito!', 'success');
+            await this.procesarReservaPendientePostLogin();
         } catch (err) {
             this.showToast(err.message, 'error');
         }
@@ -222,6 +361,12 @@ const app = {
     // NAVEGACIÓN Y SECCIONES
     // -------------------------------------------------------------
     showSection(sectionId) {
+        if (sectionId === 'mis-reservas' && !this.token) {
+            this.openAuthModal('login');
+            this.showToast('Inicia sesión (o usa un botón de acceso rápido) para ver tus reservas.', 'warning');
+            return;
+        }
+
         document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
 
@@ -231,12 +376,9 @@ const app = {
         const navBtn = document.getElementById(`nav-${sectionId}`);
         if (navBtn) navBtn.classList.add('active');
 
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
         if (sectionId === 'mis-reservas') {
-            if (!this.token) {
-                this.openAuthModal('login');
-                this.showToast('Por favor inicia sesión para ver tus reservas.', 'warning');
-                return;
-            }
             this.cargarMisReservas();
         } else if (sectionId === 'admin') {
             this.cargarTablaAdmin();
@@ -406,6 +548,23 @@ const app = {
                 return;
             }
 
+            // Pre-seleccionar automáticamente la primera franja libre para facilitar la reserva inmediata
+            if (!this.selectedFranja) {
+                const primeraLibre = franjas.find(f => f.disponible);
+                if (primeraLibre) {
+                    this.selectedFranja = {
+                        franjaId: primeraLibre.franjaId,
+                        horaInicio: primeraLibre.horaInicio,
+                        horaFin: primeraLibre.horaFin
+                    };
+                    const panel = document.getElementById('panel-confirmacion');
+                    if (panel) panel.style.display = 'block';
+                    const precioFormatted = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(this.currentEscenario.tarifaHora);
+                    document.getElementById('confirm-resumen').textContent = `${this.currentEscenario.nombre} | ${this.selectedFecha} de ${primeraLibre.horaInicio} a ${primeraLibre.horaFin}`;
+                    document.getElementById('confirm-precio').textContent = precioFormatted;
+                }
+            }
+
             grid.innerHTML = franjas.map(f => {
                 const libre = f.disponible;
                 const seleccionada = this.selectedFranja && this.selectedFranja.franjaId === f.franjaId;
@@ -440,8 +599,9 @@ const app = {
 
     async ejecutarReserva() {
         if (!this.token) {
+            this.pendingManualReserva = true;
             this.openAuthModal('login');
-            this.showToast('Debes iniciar sesión para confirmar tu reserva.', 'warning');
+            this.showToast('Selecciona tu cuenta para confirmar la reserva automáticamente.', 'info');
             return;
         }
 
@@ -452,7 +612,7 @@ const app = {
 
         const btn = document.getElementById('btn-confirmar-reserva');
         btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Validando Anti-Colisión...';
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Confirmando reserva...';
 
         try {
             const res = await fetch(`${API_BASE}/reservas`, {
@@ -488,7 +648,7 @@ const app = {
             this.cargarDisponibilidad(); // Refresca por si alguien más la ocupó
         } finally {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fa-solid fa-check-circle"></i> Confirmar Reserva Inmediata';
+            btn.innerHTML = '<i class="fa-solid fa-check-circle"></i> Confirmar Reserva';
         }
     },
 
@@ -919,7 +1079,7 @@ const app = {
         const typingDiv = document.createElement('div');
         typingDiv.className = 'chat-msg bot-msg typing-msg';
         typingDiv.id = 'bot-typing-indicator';
-        typingDiv.innerHTML = `<div class="msg-bubble"><i class="fa-solid fa-spinner fa-spin"></i> Consultando disponibilidad con Gemini...</div>`;
+        typingDiv.innerHTML = `<div class="msg-bubble"><i class="fa-solid fa-spinner fa-spin"></i> Escribiendo...</div>`;
         container.appendChild(typingDiv);
         container.scrollTop = container.scrollHeight;
 
@@ -976,7 +1136,7 @@ const app = {
                             <span><i class="fa-solid fa-tag"></i> <b>Tarifa:</b> ${precioFormatted}</span>
                         </div>
                         <button class="btn-book-now" onclick="app.confirmarReservaIa(${prop.escenarioId}, ${prop.franjaId}, '${prop.fecha}')">
-                            <i class="fa-solid fa-check-circle"></i> Reservar en 1 Clic (Autónomo)
+                            <i class="fa-solid fa-check-circle"></i> Confirmar Reserva
                         </button>
                     </div>
                 `;
@@ -1000,12 +1160,13 @@ const app = {
 
     async confirmarReservaIa(escenarioId, franjaId, fecha) {
         if (!this.token) {
+            this.pendingAiReserva = { escenarioId, franjaId, fecha };
             this.openAuthModal('login');
-            this.showToast('Por favor inicia sesión para que SportBot confirme tu reserva.', 'warning');
+            this.showToast('Selecciona tu cuenta para que SportBot confirme tu reserva automáticamente.', 'info');
             return;
         }
 
-        this.showToast('SportBot procesando reserva autónoma...', 'info');
+        this.showToast('Confirmando tu reserva...', 'info');
 
         try {
             const res = await fetch(`${API_BASE}/ai/auto-reservar`, {
@@ -1040,7 +1201,7 @@ const app = {
                     <div class="msg-bubble" style="border-left:3px solid #10b981; background: rgba(16, 185, 129, 0.08);">
                         <i class="fa-solid fa-circle-check" style="color:#10b981;"></i> <b>¡Reserva Confirmada!</b><br>
                         Código de reserva: <b>${escapeHtml(data.codigoReserva)}</b>.<br>
-                        Hemos enviado el comprobante oficial con código QR y detalles a tu correo <b>${escapeHtml(this.user.email)}</b>.
+                        Hemos enviado los datos y la fecha de tu reserva a tu correo <b>${escapeHtml(this.user.email)}</b>.
                     </div>
                 `;
                 container.appendChild(confMsgDiv);
