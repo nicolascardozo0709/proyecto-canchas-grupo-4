@@ -10,6 +10,7 @@ import com.canchas.reserva.repository.EscenarioRepository;
 import com.canchas.reserva.repository.FranjaHorariaRepository;
 import com.canchas.reserva.repository.ReservaRepository;
 import com.canchas.reserva.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +40,9 @@ public class ReservaService {
     private final FranjaHorariaRepository franjaRepository;
     private final UsuarioRepository usuarioRepository;
 
+    @Autowired(required = false)
+    private EmailService emailService;
+
     public ReservaService(ReservaRepository reservaRepository,
                           EscenarioRepository escenarioRepository,
                           FranjaHorariaRepository franjaRepository,
@@ -47,6 +51,19 @@ public class ReservaService {
         this.escenarioRepository = escenarioRepository;
         this.franjaRepository = franjaRepository;
         this.usuarioRepository = usuarioRepository;
+    }
+
+    @Autowired
+    public ReservaService(ReservaRepository reservaRepository,
+                          EscenarioRepository escenarioRepository,
+                          FranjaHorariaRepository franjaRepository,
+                          UsuarioRepository usuarioRepository,
+                          @Autowired(required = false) EmailService emailService) {
+        this.reservaRepository = reservaRepository;
+        this.escenarioRepository = escenarioRepository;
+        this.franjaRepository = franjaRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.emailService = emailService;
     }
 
     /**
@@ -114,6 +131,13 @@ public class ReservaService {
         );
 
         Reserva guardada = reservaRepository.save(reserva);
+        if (this.emailService != null) {
+            try {
+                this.emailService.enviarConfirmacionReserva(guardada);
+            } catch (Exception e) {
+                // El envío de correo es complementario y no interrumpe la transacción
+            }
+        }
         return mapToResponse(guardada);
     }
 

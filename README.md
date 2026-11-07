@@ -5,7 +5,9 @@
 ![Java](https://img.shields.io/badge/Java-21%20%7C%2025-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.4-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-![Tests](https://img.shields.io/badge/JUnit%205-19%2F19%20Passing-brightgreen?style=for-the-badge&logo=junit5&logoColor=white)
+![Tests](https://img.shields.io/badge/JUnit%205-23%2F23%20Passing-brightgreen?style=for-the-badge&logo=junit5&logoColor=white)
+![AI](https://img.shields.io/badge/Google_AI_Studio-Gemini_1.5_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)
+![Email](https://img.shields.io/badge/Notifications-HTML_Email_%2B_QR-EA4335?style=for-the-badge&logo=gmail&logoColor=white)
 ![Security](https://img.shields.io/badge/Security-JWT%20%2B%20BCrypt-blue?style=for-the-badge&logo=json-web-tokens&logoColor=white)
 
 ---
@@ -21,6 +23,27 @@
 
 ---
 
+---
+
+## ✨ Innovaciones Entrega 3: Experiencia Premium, IA y Notificaciones
+
+1. **Rediseño UI/UX de Alto Impacto (Directrices Apple & Whoop):**
+   - **Hero Teatral de Alto Contraste:** Estética obsidiana oscura (`#050811`), tipografía editorial de alto impacto (*Outfit* / *Inter*), micro-interacciones a 60 FPS y Bento Ticker en vivo.
+   - **Catálogo Bento Grid:** Presentación visual estilo galería Apple con tarjetas de 28px de radio, etiquetas de superficie certificada (Sintética, Arcilla, Parquet), iluminación nocturna LED y tarifas formateadas.
+   - **Garantía Anti-Slop:** Cero componentes genéricos, paleta calibrada y accesibilidad total.
+
+2. **SportBot — Asistente Deportivo Autónomo con Google AI Studio (Gemini 1.5 Flash):**
+   - Integración nativa con la API de Google Gemini en el backend (`/api/ai/chat` y `/api/ai/auto-reservar`).
+   - Comprensión en lenguaje natural de consultas deportivas (ej. *"¿Qué canchas de fútbol hay disponibles hoy?"*, *"Resérvame la cancha de pádel mañana a las 6pm"*).
+   - Generación de **Tarjetas Interactivas de Reserva en 1 Clic** dentro del chat para confirmación inmediata sin fricción.
+   - Motor semántico de respaldo local para funcionamiento 100% autónomo incluso sin conexión o sin API Key.
+
+3. **Servicio Asíncrono de Confirmación y Notificación por Correo Electrónico:**
+   - Envío automático de comprobante digital en HTML responsive oficial con identidad visual Javeriana al crearse cada reserva.
+   - Incluye código único de reserva, fecha, franja horaria, superficie, reglamento de uso y código QR de validación en torniquetes.
+   - Ejecución asíncrona no bloqueante (`@EnableAsync`): si el servidor SMTP no está configurado, la reserva se procesa exitosamente y el correo se simula con registro detallado en los logs.
+
+---
 ## 🚀 Inicio Rápido (Quick Start)
 
 ### Opción 1: Modo Autónomo (Evaluación Inmediata con Base de Datos H2)
@@ -34,6 +57,21 @@ mvnw.cmd spring-boot:run
 - **Aplicación Web (Frontend SPA):** `http://localhost:8080`
 - **Documentación Swagger / OpenAPI 3:** `http://localhost:8080/swagger-ui.html`
 - **Consola H2 Database:** `http://localhost:8080/h2-console` (JDBC URL: `jdbc:h2:file:./data/canchasdb`)
+
+
+### ⚙️ Variables de Entorno Opcionales (Entrega 3)
+La plataforma funciona inmediatamente sin requerir configuración adicional (modo cero configuración con simulación activa). Opcionalmente puedes configurar:
+
+```properties
+# Google AI Studio / Gemini API Key
+gemini.api.key=tu_api_key_de_google_ai_studio
+
+# Configuración SMTP para Correos Reales (Gmail, Outlook, SendGrid)
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=tu_correo@gmail.com
+spring.mail.password=tu_app_password
+```
 
 ### Opción 2: Modo Producción (MySQL 8 y Docker Compose)
 ```bash

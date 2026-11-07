@@ -53,6 +53,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/escenarios/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/franjas/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/reservas/disponibilidad").permitAll()
+                .requestMatchers("/api/ai/chat").permitAll()
 
                 // Administración de Escenarios y Franjas (Solo ADMIN)
                 .requestMatchers(HttpMethod.POST, "/api/escenarios/**").hasAuthority("ROLE_ADMIN")

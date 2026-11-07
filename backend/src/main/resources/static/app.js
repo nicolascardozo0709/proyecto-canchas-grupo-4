@@ -23,6 +23,15 @@ const app = {
     selectedFranja: null,
     selectedFecha: null,
     filtroDisciplina: '',
+    chatIaOpen: false,
+    chatIaHistory: [],
+
+    scrollToCatalogo() {
+        const target = document.getElementById('catalogo-anchor');
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+        }
+    },
 
     init() {
         // Iniciar siempre como visitante público limpio (no auto-iniciar en perfil de administrador)
@@ -473,7 +482,7 @@ const app = {
             document.getElementById('panel-confirmacion').style.display = 'none';
             this.cargarDisponibilidad();
             this.cargarMisReservas();
-            this.showSection('mis-reservas');
+            this.mostrarModalExito(data);
         } catch (err) {
             this.showToast(err.message, 'error');
             this.cargarDisponibilidad(); // Refresca por si alguien más la ocupó
@@ -858,6 +867,222 @@ const app = {
         }
     },
 
+
+    // -------------------------------------------------------------
+    // SPORTBOT IA (GOOGLE GEMINI 1.5 FLASH / STUDIO)
+    // -------------------------------------------------------------
+    toggleChatIa(forceState) {
+        const chatWindow = document.getElementById('sportbot-chat-window');
+        if (!chatWindow) return;
+
+        if (typeof forceState === 'boolean') {
+            this.chatIaOpen = forceState;
+        } else {
+            this.chatIaOpen = !this.chatIaOpen;
+        }
+
+        chatWindow.style.display = this.chatIaOpen ? 'flex' : 'none';
+        if (this.chatIaOpen) {
+            setTimeout(() => {
+                const input = document.getElementById('chat-input-text');
+                if (input) input.focus();
+            }, 100);
+        }
+    },
+
+    enviarSugerenciaIa(texto) {
+        const input = document.getElementById('chat-input-text');
+        if (input) {
+            input.value = texto;
+            this.enviarMensajeIa();
+        }
+    },
+
+    async enviarMensajeIa(e) {
+        if (e && e.preventDefault) e.preventDefault();
+        const input = document.getElementById('chat-input-text');
+        const container = document.getElementById('chat-messages-container');
+        if (!input || !container) return;
+
+        const mensaje = input.value.trim();
+        if (!mensaje) return;
+
+        // Renderizar mensaje del usuario
+        input.value = '';
+        const userMsgDiv = document.createElement('div');
+        userMsgDiv.className = 'chat-msg user-msg';
+        userMsgDiv.innerHTML = `<div class="msg-bubble">${escapeHtml(mensaje)}</div>`;
+        container.appendChild(userMsgDiv);
+        container.scrollTop = container.scrollHeight;
+
+        // Indicador de 'Escribiendo...'
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'chat-msg bot-msg typing-msg';
+        typingDiv.id = 'bot-typing-indicator';
+        typingDiv.innerHTML = `<div class="msg-bubble"><i class="fa-solid fa-spinner fa-spin"></i> Consultando disponibilidad con Gemini...</div>`;
+        container.appendChild(typingDiv);
+        container.scrollTop = container.scrollHeight;
+
+        try {
+            const headers = { 'Content-Type': 'application/json' };
+            if (this.token) {
+                headers['Authorization'] = `Bearer ${this.token}`;
+            }
+
+            const res = await fetch(`${API_BASE}/ai/chat`, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({
+                    mensaje: mensaje,
+                    historial: this.chatIaHistory || []
+                })
+            });
+
+            const data = await res.json();
+            const indicator = document.getElementById('bot-typing-indicator');
+            if (indicator) indicator.remove();
+
+            if (!res.ok) {
+                throw new Error(data.message || 'Error al comunicarse con SportBot');
+            }
+
+            // Historial conversacional
+            this.chatIaHistory.push({ role: 'user', content: mensaje });
+            this.chatIaHistory.push({ role: 'assistant', content: data.respuesta });
+
+            // Formatear negritas y saltos de línea
+            let formattedResponse = escapeHtml(data.respuesta)
+                .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+                .replace(/\n/g, '<br>');
+
+            const botMsgDiv = document.createElement('div');
+            botMsgDiv.className = 'chat-msg bot-msg';
+            
+            let htmlContent = `<div class="msg-bubble">${formattedResponse}</div>`;
+
+            // Si hay propuesta concreta lista para reservar, adjuntamos la tarjeta interactiva
+            if (data.propuestaReserva && data.propuestaReserva.sugerenciaListaParaConfirmar) {
+                const prop = data.propuestaReserva;
+                const precioFormatted = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(prop.precioTotal || 80000);
+                
+                htmlContent += `
+                    <div class="chat-booking-card">
+                        <div class="booking-card-header">
+                            <i class="fa-solid fa-bolt" style="color: #4f46e5;"></i> ${escapeHtml(prop.escenarioNombre)}
+                        </div>
+                        <div class="booking-card-info">
+                            <span><i class="fa-solid fa-calendar-day"></i> <b>Fecha:</b> ${prop.fecha}</span>
+                            <span><i class="fa-solid fa-clock"></i> <b>Horario:</b> ${prop.horaInicio} - ${prop.horaFin}</span>
+                            <span><i class="fa-solid fa-tag"></i> <b>Tarifa:</b> ${precioFormatted}</span>
+                        </div>
+                        <button class="btn-book-now" onclick="app.confirmarReservaIa(${prop.escenarioId}, ${prop.franjaId}, '${prop.fecha}')">
+                            <i class="fa-solid fa-check-circle"></i> Reservar en 1 Clic (Autónomo)
+                        </button>
+                    </div>
+                `;
+            }
+
+            botMsgDiv.innerHTML = htmlContent;
+            container.appendChild(botMsgDiv);
+            container.scrollTop = container.scrollHeight;
+
+        } catch (err) {
+            const indicator = document.getElementById('bot-typing-indicator');
+            if (indicator) indicator.remove();
+
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'chat-msg bot-msg';
+            errorDiv.innerHTML = `<div class="msg-bubble" style="border-left: 3px solid #ef4444;"><i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;"></i> Disculpa, ocurrió un inconveniente: ${escapeHtml(err.message)}</div>`;
+            container.appendChild(errorDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+    },
+
+    async confirmarReservaIa(escenarioId, franjaId, fecha) {
+        if (!this.token) {
+            this.openAuthModal('login');
+            this.showToast('Por favor inicia sesión para que SportBot confirme tu reserva.', 'warning');
+            return;
+        }
+
+        this.showToast('SportBot procesando reserva autónoma...', 'info');
+
+        try {
+            const res = await fetch(`${API_BASE}/ai/auto-reservar`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.token}`
+                },
+                body: JSON.stringify({
+                    escenarioId: escenarioId,
+                    franjaId: franjaId,
+                    fecha: fecha
+                })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.message || 'No se pudo completar la reserva asistida');
+            }
+
+            // Mostrar modal de éxito oficial con comprobante y confirmación de correo
+            this.mostrarModalExito(data);
+            this.showToast(`¡Reserva exitosa! Código: ${data.codigoReserva}`, 'success');
+
+            // Mensaje de éxito en el chat de SportBot
+            const container = document.getElementById('chat-messages-container');
+            if (container) {
+                const confMsgDiv = document.createElement('div');
+                confMsgDiv.className = 'chat-msg bot-msg';
+                confMsgDiv.innerHTML = `
+                    <div class="msg-bubble" style="border-left:3px solid #10b981; background: rgba(16, 185, 129, 0.08);">
+                        <i class="fa-solid fa-circle-check" style="color:#10b981;"></i> <b>¡Reserva Confirmada!</b><br>
+                        Código de reserva: <b>${escapeHtml(data.codigoReserva)}</b>.<br>
+                        Hemos enviado el comprobante oficial con código QR y detalles a tu correo <b>${escapeHtml(this.user.email)}</b>.
+                    </div>
+                `;
+                container.appendChild(confMsgDiv);
+                container.scrollTop = container.scrollHeight;
+            }
+
+            this.cargarEscenarios();
+            this.cargarMisReservas();
+
+        } catch (err) {
+            this.showToast(err.message, 'error');
+        }
+    },
+
+    mostrarModalExito(reserva) {
+        const codigoEl = document.getElementById('receipt-codigo');
+        const escEl = document.getElementById('receipt-escenario');
+        const discEl = document.getElementById('receipt-disciplina');
+        const fechaEl = document.getElementById('receipt-fecha');
+        const horarioEl = document.getElementById('receipt-horario');
+        const precioEl = document.getElementById('receipt-precio');
+        const userEl = document.getElementById('receipt-usuario');
+
+        if (codigoEl) codigoEl.textContent = reserva.codigoReserva || `RES-${reserva.id}`;
+        if (escEl) escEl.textContent = reserva.escenarioNombre || (this.currentEscenario ? this.currentEscenario.nombre : 'Cancha Deportiva');
+        if (discEl) discEl.textContent = reserva.disciplina || (this.currentEscenario ? this.currentEscenario.disciplina : 'DEPORTIVO');
+        if (fechaEl) fechaEl.textContent = reserva.fecha || this.selectedFecha;
+        if (horarioEl) horarioEl.textContent = `${reserva.horaInicio || ''} - ${reserva.horaFin || ''}`;
+        
+        const tarifa = reserva.precioTotal || (this.currentEscenario ? this.currentEscenario.tarifaHora : 0);
+        const formatted = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(tarifa);
+        if (precioEl) precioEl.textContent = formatted;
+
+        if (userEl && this.user) {
+            userEl.textContent = `${this.user.nombre} ${this.user.apellido} (${this.user.email})`;
+        }
+
+        const modal = document.getElementById('modal-exito-reserva');
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+    },
     // -------------------------------------------------------------
     // UTILIDADES
     // -------------------------------------------------------------
