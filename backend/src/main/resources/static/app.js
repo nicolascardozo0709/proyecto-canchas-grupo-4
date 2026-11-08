@@ -103,11 +103,12 @@ const app = {
         if (!container) return;
         container.innerHTML = this.campusSlides.map((s, idx) => `
             <div class="campus-stop-card ${idx === this.currentCampusSlide ? 'active' : ''}" onclick="app.setCampusSlide(${idx}, true)">
-                <div class="campus-stop-icon"><i class="fa-solid ${s.icon}"></i></div>
+                <img src="${s.image}" alt="${escapeHtml(s.label)}" class="campus-stop-thumb">
                 <div class="campus-stop-info">
-                    <span class="campus-stop-name">${escapeHtml(s.label)}</span>
-                    <span class="campus-stop-sub">${escapeHtml(s.sub)}</span>
+                    <span class="campus-stop-zone">${escapeHtml(s.sub)}</span>
+                    <span class="campus-stop-title">${escapeHtml(s.label)}</span>
                 </div>
+                <div class="campus-stop-progress"></div>
             </div>
         `).join('');
     },
@@ -118,16 +119,15 @@ const app = {
         this.currentCampusSlide = idx;
 
         const slide = this.campusSlides[idx];
-        const bgEl = document.getElementById('campus-pan-bg');
-        const badgeEl = document.getElementById('campus-slide-badge');
+        const imgEl = document.getElementById('campus-stage-img');
+        const badgeEl = document.getElementById('campus-slide-tag') || document.getElementById('campus-slide-badge');
         const titleEl = document.getElementById('campus-slide-title');
         const descEl = document.getElementById('campus-slide-desc');
 
-        if (bgEl) {
-            bgEl.style.backgroundImage = `url('${slide.image}')`;
-            bgEl.style.backgroundPosition = slide.panPos;
+        if (imgEl) {
+            imgEl.src = slide.image;
         }
-        if (badgeEl) badgeEl.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${escapeHtml(slide.badge)}`;
+        if (badgeEl) badgeEl.innerHTML = `<i class="fa-solid fa-crown"></i> <span>${escapeHtml(slide.badge)}</span>`;
         if (titleEl) titleEl.textContent = slide.title;
         if (descEl) descEl.textContent = slide.desc;
 
@@ -192,7 +192,7 @@ const app = {
             container.innerHTML = `
                 <div style="display:flex; align-items:center; gap:10px;">
                     <div style="text-align:right;">
-                        <div style="font-weight:700; font-size:0.88rem; ${esAdmin ? 'color:#d97706;' : ''}">
+                        <div style="font-weight:700; font-size:0.88rem; color:${esAdmin ? '#E5C98B' : '#FAF8F5'};">
                             ${esAdmin ? '<i class="fa-solid fa-crown"></i> ' : ''}${escapeHtml(this.user.nombre)} ${escapeHtml(this.user.apellido)}
                         </div>
                         <span class="badge ${esAdmin ? 'badge-mantenimiento' : 'badge-primary'}" style="position:static; font-size:0.65rem; ${esAdmin ? 'background:#f59e0b; color:#0f172a; font-weight:800;' : ''}">
