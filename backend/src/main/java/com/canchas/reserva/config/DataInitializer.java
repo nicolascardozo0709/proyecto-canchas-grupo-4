@@ -47,7 +47,7 @@ public class DataInitializer implements CommandLineRunner {
 
         if (escenarioRepository.count() == 0) {
             Escenario futbol8 = new Escenario(
-                "Cancha Sintética 1 - El Campincito",
+                "Cancha Sintética El Campincito",
                 Disciplina.FUTBOL,
                 Superficie.SINTETICA,
                 16,
@@ -61,7 +61,7 @@ public class DataInitializer implements CommandLineRunner {
             crearFranjasEstandar(futbol8, 6, 22);
 
             Escenario tenis = new Escenario(
-                "Pista Central de Tenis",
+                "Court Central de Tenis",
                 Disciplina.TENIS,
                 Superficie.ARCILLA,
                 4,
@@ -89,21 +89,21 @@ public class DataInitializer implements CommandLineRunner {
             crearFranjasEstandar(padel, 7, 22);
 
             Escenario coliseo = new Escenario(
-                "Coliseo de Baloncesto y Voleibol",
+                "Coliseo Cubierto de Baloncesto",
                 Disciplina.BALONCESTO,
                 Superficie.PARQUET,
                 20,
                 true,
                 BigDecimal.valueOf(90000.00),
                 false,
-                "Tablón de madera parquet de alto impacto con tableros de cristal retráctiles y sonido ambiental.",
+                "Arena cubierta con maderamen flotante certificado FIBA, tableros profesionales de cristal templado e iluminación LED.",
                 "/coliseo.jpg"
             );
             coliseo = escenarioRepository.save(coliseo);
             crearFranjasEstandar(coliseo, 8, 21);
 
             Escenario futbol11 = new Escenario(
-                "Cancha de Fútbol 11 - La Javeriana",
+                "Estadio Principal de Fútbol 11",
                 Disciplina.FUTBOL,
                 Superficie.NATURAL,
                 22,
