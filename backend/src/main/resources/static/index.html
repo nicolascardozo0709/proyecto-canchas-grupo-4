@@ -7,9 +7,9 @@
     <link rel="icon" type="image/png" href="logo-javeriana.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="styles.css?v=vip3">
+    <link rel="stylesheet" href="styles.css?v=dark4">
 </head>
 <body>
     <!-- Barra Superior de Navegación -->
@@ -19,32 +19,32 @@
                 <img src="logo-javeriana.png" alt="Pontificia Universidad Javeriana" class="javeriana-nav-logo">
                 <div class="logo-text">
                     <span class="logo-title">CANCHAS<b>JAVERIANA</b></span>
-                    <span class="logo-subtitle">Centro Deportivo Universitario</span>
+                    <span class="logo-subtitle">Complejo Deportivo Universitario</span>
                 </div>
             </a>
 
             <nav class="nav-links">
                 <button class="nav-item active" id="nav-catalogo" onclick="app.showSection('catalogo')">
-                    <i class="fa-solid fa-compass"></i> Escenarios
+                    Escenarios
                 </button>
                 <button class="nav-item" id="nav-mis-reservas" onclick="app.showSection('mis-reservas')">
-                    <i class="fa-solid fa-calendar-check"></i> Mis Reservas
+                    Mis Reservas
                     <span class="badge-count" id="count-reservas">0</span>
                 </button>
                 <button class="nav-item" id="nav-sportbot" onclick="app.toggleChatIa(true)">
-                    <i class="fa-solid fa-comments"></i> Asistente IA
+                    Asistente IA
                 </button>
                 <button class="nav-item admin-only" id="nav-admin" onclick="app.showSection('admin')" style="display: none;">
-                    <i class="fa-solid fa-shield-halved"></i> Administración
+                    Administración
                 </button>
             </nav>
 
             <div class="nav-user" id="nav-user-container">
                 <button class="btn btn-outline" id="btn-login-modal" onclick="app.openAuthModal('login')">
-                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Iniciar Sesión
+                    Iniciar Sesión
                 </button>
                 <button class="btn btn-primary" id="btn-register-modal" onclick="app.openAuthModal('register')">
-                    <i class="fa-solid fa-user-plus"></i> Registrarse
+                    Registrarse
                 </button>
             </div>
         </div>
@@ -53,10 +53,10 @@
     <!-- Barra de Estado Exclusiva del Administrador -->
     <div id="admin-indicator-bar" class="admin-top-bar" style="display: none;">
         <div class="admin-bar-content">
-            <span class="admin-badge"><i class="fa-solid fa-crown"></i> MODO ADMINISTRADOR COMPLEJO DEPORTIVO</span>
+            <span class="admin-badge">MODO ADMINISTRADOR COMPLEJO DEPORTIVO</span>
             <span class="admin-desc">Control de escenarios, mantenimiento y reservas globales en MySQL 8.4.</span>
-            <button class="btn btn-sm btn-outline" style="background: rgba(255,255,255,0.15); color:white; border-color: rgba(255,255,255,0.3);" onclick="app.showSection('admin')">
-                <i class="fa-solid fa-chart-line"></i> Panel de Control
+            <button class="btn btn-sm btn-outline" onclick="app.showSection('admin')">
+                Panel de Control
             </button>
         </div>
     </div>
@@ -67,30 +67,64 @@
     <!-- Contenido Principal Dinámico -->
     <main class="main-content">
         <!-- ========================================== -->
-        <!-- SECCIÓN 1: RECORRIDO DEL CAMPUS Y ESCENARIOS REGLAMENTARIOS -->
+        <!-- SECCIÓN 1: RECORRIDO INTERACTIVO DEL CAMPUS Y ESCENARIOS REGLAMENTARIOS -->
         <!-- ========================================== -->
         <section id="section-catalogo" class="content-section active">
 
-            <!-- HERO PANORÁMICO DEL CAMPUS CON AUTOSCROLL POR LOS ESCENARIOS -->
+            <!-- VISOR INTERACTIVO DEL CAMPUS CON AUTOSCROLL Y HOTSPOTS EN VIVO -->
             <div class="campus-showcase">
-                <div class="campus-stage" id="campus-stage">
-                    <!-- Imagen panorámica activa con efecto Ken Burns / Autoscroll -->
+                <div class="campus-stage" id="campus-stage" onmousemove="app.handleStageParallax(event)" onmouseleave="app.resetStageParallax()">
+                    <!-- Imagen panorámica activa con efecto Parallax + Autoscroll -->
                     <img id="campus-stage-img" src="/campus-javeriana.jpg" alt="Campus Deportivo Javeriana" class="campus-stage-bg">
                     <div class="campus-stage-gradient"></div>
 
-                    <div class="campus-stage-content">
+                    <!-- Capa de Puntos Interactivos (Hotspots) sobre la imagen -->
+                    <div id="campus-hotspots-layer" class="campus-hotspots-layer"></div>
+
+                    <!-- Barra Superior del Visor Interactivo: Telemetría y Modo de Luz -->
+                    <div class="campus-stage-topbar">
                         <div class="campus-location-pill" id="campus-slide-tag">
-                            <i class="fa-solid fa-location-dot"></i>
-                            <span>RECORRIDO DEL CAMPUS · PONTIFICIA UNIVERSIDAD JAVERIANA</span>
+                            <span class="live-pulse-dot"></span>
+                            <span>VISTA GENERAL DEL CAMPUS</span>
                         </div>
-                        <h1 id="campus-slide-title">Complejo Deportivo Javeriana</h1>
-                        <p id="campus-slide-desc">Recorre las instalaciones deportivas del campus: coliseo cubierto, pistas de polvo de ladrillo, pádel panorámico y canchas de fútbol.</p>
+
+                        <div class="campus-interactive-controls">
+                            <button type="button" class="hud-control-btn" id="btn-toggle-night" onclick="app.toggleNightVision()" title="Alternar atmósfera de iluminación">
+                                <span class="hud-dot"></span>
+                                <span id="night-mode-label">Modo Nocturno LED</span>
+                            </button>
+                            <button type="button" class="hud-control-btn" id="btn-toggle-autoplay" onclick="app.toggleCampusAutoplay()" title="Pausar o reanudar recorrido automático">
+                                <span id="autoplay-label">Auto-Tour: Activo</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="campus-stage-content">
+                        <h1 id="campus-slide-title">Centro Javeriano de Formación Deportiva</h1>
+                        <p id="campus-slide-desc">Explora interactivamente cada escenario del complejo deportivo. Haz clic en los puntos del mapa o selecciona una parada inferior.</p>
+                        
+                        <!-- Telemetría en vivo del escenario activo -->
+                        <div class="campus-live-specs" id="campus-live-specs">
+                            <div class="live-spec-chip">
+                                <span class="spec-label">SUPERFICIE</span>
+                                <b id="hud-spec-surface">5 Escenarios Oficiales</b>
+                            </div>
+                            <div class="live-spec-chip">
+                                <span class="spec-label">ILUMINACIÓN</span>
+                                <b id="hud-spec-light">LED 1200 Lux</b>
+                            </div>
+                            <div class="live-spec-chip">
+                                <span class="spec-label">TARIFA DESDE</span>
+                                <b id="hud-spec-price">$60.000 / hora</b>
+                            </div>
+                        </div>
+
                         <div class="campus-stage-actions">
-                            <button class="btn btn-stage-white" id="campus-slide-cta" onclick="app.scrollToCatalogo()">
-                                <i class="fa-solid fa-calendar-check"></i> Ver Escenarios Reglamentarios
+                            <button class="btn btn-stage-royal" id="campus-slide-cta" onclick="app.accionPrincipalSlide()">
+                                Explorar Escenarios Reglamentarios
                             </button>
                             <button class="btn btn-stage-glass" onclick="app.toggleChatIa(true)">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i> Reservar por Chat IA
+                                Reservar con Asistente IA
                             </button>
                         </div>
                     </div>
@@ -117,25 +151,25 @@
                 <div class="catalogo-header-row">
                     <div>
                         <h2 class="catalogo-main-title">Escenarios Reglamentarios <span id="catalogo-total" class="catalogo-count">(Cargando...)</span></h2>
-                        <p class="text-muted">Selecciona el escenario de tu preferencia para consultar horarios y apartar tu cancha.</p>
+                        <p class="text-muted">Selecciona el escenario de tu preferencia para consultar disponibilidad en tiempo real y apartar tu cancha.</p>
                     </div>
 
-                    <!-- Filtros de Disciplina -->
+                    <!-- Filtros de Disciplina Limpios (Sin emojis ni iconos innecesarios) -->
                     <div class="filter-pills">
                         <button class="pill active" data-disciplina="" onclick="app.filterDisciplina('')">
-                            <i class="fa-solid fa-border-all"></i> Todos
+                            Todos
                         </button>
                         <button class="pill" data-disciplina="FUTBOL" onclick="app.filterDisciplina('FUTBOL')">
-                            <i class="fa-solid fa-futbol"></i> Fútbol
+                            Fútbol
                         </button>
                         <button class="pill" data-disciplina="TENIS" onclick="app.filterDisciplina('TENIS')">
-                            <i class="fa-solid fa-table-tennis-paddle-ball"></i> Tenis
+                            Tenis
                         </button>
                         <button class="pill" data-disciplina="PADEL" onclick="app.filterDisciplina('PADEL')">
-                            <i class="fa-solid fa-baseball-bat-ball"></i> Pádel
+                            Pádel
                         </button>
                         <button class="pill" data-disciplina="BALONCESTO" onclick="app.filterDisciplina('BALONCESTO')">
-                            <i class="fa-solid fa-basketball"></i> Baloncesto & Vóley
+                            Baloncesto
                         </button>
                     </div>
                 </div>
@@ -167,19 +201,15 @@
                                 
                                 <div class="detail-specs">
                                     <div class="spec-item">
-                                        <i class="fa-solid fa-layer-group"></i>
                                         <div><span>Superficie</span><b id="res-cancha-superficie">-</b></div>
                                     </div>
                                     <div class="spec-item">
-                                        <i class="fa-solid fa-users"></i>
                                         <div><span>Capacidad</span><b id="res-cancha-aforo">-</b></div>
                                     </div>
                                     <div class="spec-item">
-                                        <i class="fa-solid fa-lightbulb"></i>
                                         <div><span>Iluminación</span><b id="res-cancha-luz">-</b></div>
                                     </div>
                                     <div class="spec-item">
-                                        <i class="fa-solid fa-tag"></i>
                                         <div><span>Tarifa / Hora</span><b id="res-cancha-precio" class="text-primary">-</b></div>
                                     </div>
                                 </div>
@@ -188,7 +218,7 @@
 
                         <!-- Selector de Fecha -->
                         <div class="date-picker-card">
-                            <label for="fecha-reserva"><i class="fa-solid fa-calendar-day"></i> Fecha del Partido</label>
+                            <label for="fecha-reserva">Fecha del Partido</label>
                             <input type="date" id="fecha-reserva" onchange="app.onFechaChange()">
                             <small class="helper-text">Elige el día para ver las horas disponibles en vivo.</small>
                         </div>
@@ -217,13 +247,13 @@
                             <div id="panel-confirmacion" class="confirmacion-box" style="display: none;">
                                 <div class="confirm-content">
                                     <div class="confirm-info">
-                                        <span class="confirm-tag"><i class="fa-solid fa-circle-check"></i> Horario Seleccionado</span>
+                                        <span class="confirm-tag">Horario Seleccionado</span>
                                         <h4>Resumen de tu Reserva</h4>
                                         <p id="confirm-resumen">Cancha Sintética 1 - 18:00 a 19:00</p>
                                         <div class="confirm-price">Total a Pagar: <b id="confirm-precio">$85.000 COP</b></div>
                                     </div>
-                                    <button class="btn btn-success btn-lg" id="btn-confirmar-reserva" onclick="app.ejecutarReserva()">
-                                        <i class="fa-solid fa-check-circle"></i> Confirmar Reserva
+                                    <button class="btn btn-primary btn-lg" id="btn-confirmar-reserva" onclick="app.ejecutarReserva()">
+                                        Confirmar Reserva
                                     </button>
                                 </div>
                             </div>
@@ -258,15 +288,15 @@
             <div class="section-container">
                 <div class="section-header">
                     <div>
-                        <h2><i class="fa-solid fa-crown" style="color: #f59e0b;"></i> Panel de Control del Administrador</h2>
+                        <h2>Panel de Control del Administrador</h2>
                         <p class="text-muted">Gestión de escenarios deportivos, estados de mantenimiento y reservas del campus (Motor MySQL 8.4).</p>
                     </div>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                         <span class="btn btn-outline" style="cursor: default;">
-                            <i class="fa-solid fa-database" style="color:#059669;"></i> MySQL 8.4 · canchas_db
+                            MySQL 8.4 · canchas_db
                         </span>
                         <button class="btn btn-primary" onclick="app.openModalCrearEscenario()">
-                            <i class="fa-solid fa-plus"></i> Registrar Nuevo Escenario
+                            Registrar Nuevo Escenario
                         </button>
                     </div>
                 </div>
@@ -274,28 +304,24 @@
                 <!-- Tarjetas KPI del Administrador -->
                 <div class="admin-kpi-grid">
                     <div class="kpi-card">
-                        <div class="kpi-icon"><i class="fa-solid fa-futbol"></i></div>
                         <div>
                             <span class="kpi-label">Total Escenarios</span>
                             <b class="kpi-value" id="kpi-total-canchas">0</b>
                         </div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-icon icon-success"><i class="fa-solid fa-circle-check"></i></div>
                         <div>
                             <span class="kpi-label">Canchas Habilitadas</span>
                             <b class="kpi-value" id="kpi-canchas-activas">0</b>
                         </div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-icon icon-warning"><i class="fa-solid fa-triangle-exclamation"></i></div>
                         <div>
                             <span class="kpi-label">En Mantenimiento</span>
                             <b class="kpi-value" id="kpi-canchas-mantenimiento">0</b>
                         </div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-icon icon-info"><i class="fa-solid fa-users"></i></div>
                         <div>
                             <span class="kpi-label">Aforo Simultáneo</span>
                             <b class="kpi-value" id="kpi-aforo-total">0</b>
@@ -306,11 +332,11 @@
                 <!-- Pestañas del Administrador -->
                 <div class="admin-tabs">
                     <button class="admin-tab-btn active" id="tab-btn-escenarios" onclick="app.switchAdminTab('escenarios')">
-                        <i class="fa-solid fa-layer-group"></i> Gestión de Escenarios y Mantenimiento
+                        Gestión de Escenarios y Mantenimiento
                     </button>
                     <button class="admin-tab-btn" id="tab-btn-reservas" onclick="app.switchAdminTab('reservas')">
-                        <i class="fa-solid fa-clipboard-list"></i> Monitor Global de Reservas
-                        <span class="badge-count" id="count-global-reservas" style="background:#f59e0b; color:#0f172a;">0</span>
+                        Monitor Global de Reservas
+                        <span class="badge-count" id="count-global-reservas">0</span>
                     </button>
                 </div>
 
@@ -368,34 +394,32 @@
     <!-- ========================================== -->
     <div id="sportbot-widget" class="sportbot-container">
         <button id="sportbot-fab" class="sportbot-fab" onclick="app.toggleChatIa()" title="Abrir Asistente Deportivo IA">
-            <i class="fa-solid fa-comments"></i>
+            <span class="live-pulse-dot"></span>
             <span>Asistente IA</span>
         </button>
 
         <div id="sportbot-chat-window" class="sportbot-chat-window" style="display: none;">
             <div class="chat-header">
                 <div class="chat-header-info">
-                    <div class="chat-avatar">
-                        <i class="fa-solid fa-robot"></i>
-                    </div>
                     <div>
-                        <div class="chat-title">Asistente Javeriana</div>
-                        <div class="chat-status"><span class="status-dot"></span> En línea · Reservas por chat</div>
+                        <div class="chat-title">Asistente Deportivo Javeriana</div>
+                        <div class="chat-status"><span class="status-dot"></span> En línea · Reservas autónomas</div>
                     </div>
                 </div>
                 <button class="chat-close-btn" onclick="app.toggleChatIa(false)">&times;</button>
             </div>
 
             <div class="chat-chips-bar">
-                <button class="chip-btn" onclick="app.enviarSugerenciaIa('¿Qué canchas de fútbol hay hoy?')">⚽ Fútbol hoy</button>
-                <button class="chip-btn" onclick="app.enviarSugerenciaIa('Quiero jugar tenis mañana a las 4pm')">🎾 Tenis 4:00 PM</button>
-                <button class="chip-btn" onclick="app.enviarSugerenciaIa('Quiero jugar pádel hoy a las 6pm')">🏸 Pádel 6:00 PM</button>
+                <button class="chip-btn" onclick="app.enviarSugerenciaIa('¿Qué canchas de fútbol hay hoy?')">Fútbol hoy</button>
+                <button class="chip-btn" onclick="app.enviarSugerenciaIa('Quiero jugar tenis mañana a las 4pm')">Tenis 4:00 PM</button>
+                <button class="chip-btn" onclick="app.enviarSugerenciaIa('Quiero jugar pádel hoy a las 6pm')">Pádel 6:00 PM</button>
+                <button class="chip-btn" onclick="app.enviarSugerenciaIa('Quiero reservar el coliseo de baloncesto')">Baloncesto</button>
             </div>
 
             <div id="chat-messages-container" class="chat-messages">
                 <div class="chat-msg bot-msg">
                     <div class="msg-bubble">
-                        ¡Hola! 👋 ¿Qué deporte te gustaría jugar? Dime qué cancha o disciplina buscas y a qué hora te queda bien para armar tu reserva.
+                        Hola. ¿Qué escenario deportivo deseas reservar hoy? Indícame la disciplina y el horario de tu preferencia.
                     </div>
                 </div>
             </div>
@@ -403,7 +427,7 @@
             <form id="chat-input-form" onsubmit="app.enviarMensajeIa(event)" class="chat-input-box">
                 <input type="text" id="chat-input-text" placeholder="Escribe un deporte u horario..." autocomplete="off">
                 <button type="submit" class="btn-chat-send" id="btn-chat-send">
-                    <i class="fa-solid fa-paper-plane"></i>
+                    <i class="fa-solid fa-arrow-up"></i>
                 </button>
             </form>
         </div>
@@ -416,14 +440,14 @@
         <div class="modal-box modal-success-box">
             <button class="modal-close" onclick="app.closeModal('modal-exito-reserva')">&times;</button>
             <div class="success-header">
-                <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
-                <h3>¡Reserva Confirmada!</h3>
-                <p class="text-muted">Tu cancha ha quedado apartada exitosamente.</p>
+                <div class="success-icon"><i class="fa-solid fa-check"></i></div>
+                <h3>Reserva Confirmada</h3>
+                <p class="text-muted">Tu escenario deportivo ha quedado apartado exitosamente.</p>
             </div>
 
             <div class="receipt-card">
                 <div class="receipt-code-badge">
-                    <span>CÓDIGO DE RESERVA</span>
+                    <span>CÓDIGO OFICIAL DE RESERVA</span>
                     <b id="receipt-codigo">RES-XXXXXXXX</b>
                 </div>
 
@@ -446,7 +470,7 @@
                     </div>
                     <div class="receipt-item">
                         <span>Tarifa</span>
-                        <b id="receipt-precio" style="color:#059669;">-</b>
+                        <b id="receipt-precio">-</b>
                     </div>
                     <div class="receipt-item">
                         <span>Titular</span>
@@ -457,8 +481,8 @@
                 <div class="email-sent-badge">
                     <i class="fa-solid fa-envelope-circle-check"></i>
                     <div>
-                        <b>Notificación enviada por correo</b>
-                        <span>Enviamos los datos de tu reserva y la fecha programada a tu correo registrado.</span>
+                        <b>Comprobante enviado por correo electrónico</b>
+                        <span>Se enviaron los detalles y la fecha programada a tu correo registrado.</span>
                     </div>
                 </div>
             </div>
@@ -466,7 +490,7 @@
             <div class="modal-actions" style="margin-top: 20px;">
                 <button class="btn btn-outline" onclick="app.closeModal('modal-exito-reserva')">Seguir explorando</button>
                 <button class="btn btn-primary" onclick="app.showSection('mis-reservas'); app.closeModal('modal-exito-reserva');">
-                    <i class="fa-solid fa-calendar-check"></i> Ver Mis Reservas
+                    Ver Mis Reservas
                 </button>
             </div>
         </div>
@@ -487,15 +511,15 @@
             <!-- Formulario Login -->
             <form id="form-login" onsubmit="app.handleLogin(event)">
                 <div class="form-group">
-                    <label><i class="fa-solid fa-envelope"></i> Correo Electrónico</label>
+                    <label>Correo Electrónico</label>
                     <input type="email" id="login-email" required placeholder="usuario@canchas.com">
                 </div>
                 <div class="form-group">
-                    <label><i class="fa-solid fa-lock"></i> Contraseña</label>
+                    <label>Contraseña</label>
                     <input type="password" id="login-password" required placeholder="••••••••">
                 </div>
                 <button type="submit" class="btn btn-primary btn-block btn-lg">
-                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Iniciar Sesión
+                    Iniciar Sesión
                 </button>
                 <div class="modal-footer-text">
                     ¿No tienes cuenta? <a href="#" onclick="app.switchAuthMode('register')">Regístrate aquí</a>
@@ -505,19 +529,19 @@
                     <span><b>Ingreso rápido en 1 clic (selecciona tu usuario):</b></span>
                     <div class="demo-pills">
                         <button type="button" class="btn-demo" onclick="app.loginDirectoDemo('nicolas@canchas.com', 'user123')">
-                            <i class="fa-solid fa-bolt" style="color:#10b981;"></i> Entrar como Nicolás Cardozo
+                            Entrar como Nicolás Cardozo
                         </button>
                         <button type="button" class="btn-demo" onclick="app.loginDirectoDemo('samuel@canchas.com', 'user123')">
-                            <i class="fa-solid fa-bolt" style="color:#10b981;"></i> Entrar como Samuel Correa
+                            Entrar como Samuel Correa
                         </button>
                         <button type="button" class="btn-demo" onclick="app.loginDirectoDemo('espinosa@canchas.com', 'user123')">
-                            <i class="fa-solid fa-bolt" style="color:#10b981;"></i> Entrar como Nicolás Espinosa
+                            Entrar como Nicolás Espinosa
                         </button>
                         <button type="button" class="btn-demo" onclick="app.loginDirectoDemo('gustavo@canchas.com', 'user123')">
-                            <i class="fa-solid fa-bolt" style="color:#10b981;"></i> Entrar como Gustavo Mejía
+                            Entrar como Gustavo Mejía
                         </button>
                         <button type="button" class="btn-demo" onclick="app.loginDirectoDemo('admin@canchas.com', 'admin123')">
-                            <i class="fa-solid fa-user-shield" style="color:#f59e0b;"></i> Entrar como Administrador
+                            Entrar como Administrador
                         </button>
                     </div>
                 </div>
@@ -557,7 +581,7 @@
                     <input type="password" id="reg-password" required minlength="6" placeholder="Mínimo 6 caracteres">
                 </div>
                 <button type="submit" class="btn btn-primary btn-block btn-lg">
-                    <i class="fa-solid fa-user-plus"></i> Crear Cuenta
+                    Crear Cuenta
                 </button>
                 <div class="modal-footer-text">
                     ¿Ya tienes cuenta? <a href="#" onclick="app.switchAuthMode('login')">Inicia sesión</a>
@@ -590,7 +614,6 @@
                             <option value="TENIS">Tenis</option>
                             <option value="PADEL">Pádel</option>
                             <option value="BALONCESTO">Baloncesto</option>
-                            <option value="VOLEIBOL">Voleibol</option>
                         </select>
                     </div>
                 </div>
@@ -639,7 +662,7 @@
 
                 <div class="modal-actions">
                     <button type="button" class="btn btn-outline" onclick="app.closeModal('modal-escenario')">Cancelar</button>
-                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Guardar Escenario</button>
+                    <button type="submit" class="btn btn-primary">Guardar Escenario</button>
                 </div>
             </form>
         </div>
@@ -652,7 +675,6 @@
         <div class="modal-box">
             <button class="modal-close" onclick="app.closeModal('modal-cancelar')">&times;</button>
             <div class="modal-header">
-                <div class="logo-icon small alert"><i class="fa-solid fa-triangle-exclamation"></i></div>
                 <h3>¿Cancelar esta reserva?</h3>
                 <p class="text-muted">El horario quedará libre de inmediato para otros usuarios.</p>
             </div>
@@ -664,12 +686,12 @@
             <div class="modal-actions">
                 <button type="button" class="btn btn-outline" onclick="app.closeModal('modal-cancelar')">Volver</button>
                 <button type="button" class="btn btn-danger" onclick="app.ejecutarCancelacion()">
-                    <i class="fa-solid fa-ban"></i> Sí, Cancelar Reserva
+                    Sí, Cancelar Reserva
                 </button>
             </div>
         </div>
     </div>
 
-    <script src="app.js?v=vip3"></script>
+    <script src="app.js?v=dark4"></script>
 </body>
 </html>
