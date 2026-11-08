@@ -69,7 +69,7 @@ public class DataInitializer implements CommandLineRunner {
                 BigDecimal.valueOf(60000.00),
                 false,
                 "Cancha reglamentaria en polvo de ladrillo (arcilla roja), drenaje rápido y gradería lateral.",
-                "/tenis.jpg"
+                "/tenis.jpg?v=vip3"
             );
             tenis = escenarioRepository.save(tenis);
             crearFranjasEstandar(tenis, 6, 20);
@@ -83,7 +83,7 @@ public class DataInitializer implements CommandLineRunner {
                 BigDecimal.valueOf(70000.00),
                 false,
                 "Pista de pádel con cerramiento de vidrio templado panorámico y césped monofilamento azul.",
-                "/padel.png"
+                "/padel.png?v=vip3"
             );
             padel = escenarioRepository.save(padel);
             crearFranjasEstandar(padel, 7, 22);
@@ -120,8 +120,8 @@ public class DataInitializer implements CommandLineRunner {
         // Sincronizar imágenes locales de alta resolución en todos los escenarios existentes
         escenarioRepository.findAll().forEach(e -> {
             String nuevaImg = null;
-            if (e.getDisciplina() == Disciplina.PADEL) nuevaImg = "/padel.png";
-            else if (e.getDisciplina() == Disciplina.TENIS) nuevaImg = "/tenis.jpg";
+            if (e.getDisciplina() == Disciplina.PADEL) nuevaImg = "/padel.png?v=vip3";
+            else if (e.getDisciplina() == Disciplina.TENIS) nuevaImg = "/tenis.jpg?v=vip3";
             else if (e.getDisciplina() == Disciplina.BALONCESTO) nuevaImg = "/coliseo.jpg";
             else if (e.getDisciplina() == Disciplina.FUTBOL) {
                 nuevaImg = (e.getNombre() != null && e.getNombre().contains("11")) ? "/futbol11.jpg" : "/futbol8.jpg";
