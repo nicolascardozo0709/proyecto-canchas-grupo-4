@@ -2046,3 +2046,41 @@ body {
         width: calc(100vw - 32px);
     }
 }
+
+/* ==========================================
+   MINIMALIST CLEAN OVERRIDES (ZERO CLUTTER)
+   ========================================== */
+.campus-subtitle-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: var(--royal-ice);
+    margin-bottom: 8px;
+    display: inline-block;
+}
+
+.card-image-box {
+    height: 245px;
+}
+
+.card-body {
+    padding: 22px 24px;
+}
+
+.card-title {
+    font-size: 1.24rem;
+    margin-bottom: 6px;
+}
+
+.card-meta-line {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+.price-unit {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+}

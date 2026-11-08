@@ -9,17 +9,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="styles.css?v=dark4">
+    <link rel="stylesheet" href="styles.css?v=clean5">
 </head>
 <body>
-    <!-- Barra Superior de Navegación -->
+    <!-- Barra Superior de Navegación Minimalista -->
     <header class="navbar">
         <div class="nav-container">
             <a href="#" class="brand-logo" onclick="app.showSection('catalogo')">
                 <img src="logo-javeriana.png" alt="Pontificia Universidad Javeriana" class="javeriana-nav-logo">
                 <div class="logo-text">
                     <span class="logo-title">CANCHAS<b>JAVERIANA</b></span>
-                    <span class="logo-subtitle">Complejo Deportivo Universitario</span>
                 </div>
             </a>
 
@@ -53,8 +52,8 @@
     <!-- Barra de Estado Exclusiva del Administrador -->
     <div id="admin-indicator-bar" class="admin-top-bar" style="display: none;">
         <div class="admin-bar-content">
-            <span class="admin-badge">MODO ADMINISTRADOR COMPLEJO DEPORTIVO</span>
-            <span class="admin-desc">Control de escenarios, mantenimiento y reservas globales en MySQL 8.4.</span>
+            <span class="admin-badge">MODO ADMINISTRADOR</span>
+            <span class="admin-desc">Gestión de escenarios y reservas en MySQL 8.4</span>
             <button class="btn btn-sm btn-outline" onclick="app.showSection('admin')">
                 Panel de Control
             </button>
@@ -67,116 +66,56 @@
     <!-- Contenido Principal Dinámico -->
     <main class="main-content">
         <!-- ========================================== -->
-        <!-- SECCIÓN 1: RECORRIDO INTERACTIVO DEL CAMPUS Y ESCENARIOS REGLAMENTARIOS -->
+        <!-- SECCIÓN 1: RECORRIDO LIMPIO DEL CAMPUS Y ESCENARIOS -->
         <!-- ========================================== -->
         <section id="section-catalogo" class="content-section active">
 
-            <!-- VISOR INTERACTIVO DEL CAMPUS CON AUTOSCROLL Y HOTSPOTS EN VIVO -->
+            <!-- VISOR PANORÁMICO LIMPIO CON AUTOSCROLL -->
             <div class="campus-showcase">
-                <div class="campus-stage" id="campus-stage" onmousemove="app.handleStageParallax(event)" onmouseleave="app.resetStageParallax()">
-                    <!-- Imagen panorámica activa con efecto Parallax + Autoscroll -->
+                <div class="campus-stage" id="campus-stage">
                     <img id="campus-stage-img" src="/campus-javeriana.jpg" alt="Campus Deportivo Javeriana" class="campus-stage-bg">
                     <div class="campus-stage-gradient"></div>
 
-                    <!-- Capa de Puntos Interactivos (Hotspots) sobre la imagen -->
-                    <div id="campus-hotspots-layer" class="campus-hotspots-layer"></div>
-
-                    <!-- Barra Superior del Visor Interactivo: Telemetría y Modo de Luz -->
-                    <div class="campus-stage-topbar">
-                        <div class="campus-location-pill" id="campus-slide-tag">
-                            <span class="live-pulse-dot"></span>
-                            <span>VISTA GENERAL DEL CAMPUS</span>
-                        </div>
-
-                        <div class="campus-interactive-controls">
-                            <button type="button" class="hud-control-btn" id="btn-toggle-night" onclick="app.toggleNightVision()" title="Alternar atmósfera de iluminación">
-                                <span class="hud-dot"></span>
-                                <span id="night-mode-label">Modo Nocturno LED</span>
-                            </button>
-                            <button type="button" class="hud-control-btn" id="btn-toggle-autoplay" onclick="app.toggleCampusAutoplay()" title="Pausar o reanudar recorrido automático">
-                                <span id="autoplay-label">Auto-Tour: Activo</span>
-                            </button>
-                        </div>
-                    </div>
-
                     <div class="campus-stage-content">
+                        <span class="campus-subtitle-tag" id="campus-slide-tag">CAMPUS DEPORTIVO</span>
                         <h1 id="campus-slide-title">Centro Javeriano de Formación Deportiva</h1>
-                        <p id="campus-slide-desc">Explora interactivamente cada escenario del complejo deportivo. Haz clic en los puntos del mapa o selecciona una parada inferior.</p>
-                        
-                        <!-- Telemetría en vivo del escenario activo -->
-                        <div class="campus-live-specs" id="campus-live-specs">
-                            <div class="live-spec-chip">
-                                <span class="spec-label">SUPERFICIE</span>
-                                <b id="hud-spec-surface">5 Escenarios Oficiales</b>
-                            </div>
-                            <div class="live-spec-chip">
-                                <span class="spec-label">ILUMINACIÓN</span>
-                                <b id="hud-spec-light">LED 1200 Lux</b>
-                            </div>
-                            <div class="live-spec-chip">
-                                <span class="spec-label">TARIFA DESDE</span>
-                                <b id="hud-spec-price">$60.000 / hora</b>
-                            </div>
-                        </div>
-
+                        <p id="campus-slide-desc">Instalaciones reglamentarias de fútbol, tenis, pádel y baloncesto.</p>
                         <div class="campus-stage-actions">
                             <button class="btn btn-stage-royal" id="campus-slide-cta" onclick="app.accionPrincipalSlide()">
-                                Explorar Escenarios Reglamentarios
-                            </button>
-                            <button class="btn btn-stage-glass" onclick="app.toggleChatIa(true)">
-                                Reservar con Asistente IA
+                                Ver Escenarios
                             </button>
                         </div>
                     </div>
 
-                    <!-- Controles laterales del recorrido -->
-                    <button class="campus-nav-arrow prev" onclick="app.prevCampusSlide()" title="Escenario anterior">
+                    <button class="campus-nav-arrow prev" onclick="app.prevCampusSlide()" title="Anterior">
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
-                    <button class="campus-nav-arrow next" onclick="app.nextCampusSlide()" title="Siguiente escenario">
+                    <button class="campus-nav-arrow next" onclick="app.nextCampusSlide()" title="Siguiente">
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 </div>
 
-                <!-- Cinta inferior con Autoscroll de las paradas del Campus -->
+                <!-- Cinta inferior limpia de paradas -->
                 <div class="campus-tour-bar">
-                    <div class="campus-tour-inner" id="campus-tour-stops">
-                        <!-- Inyectado y sincronizado en vivo por app.js -->
-                    </div>
+                    <div class="campus-tour-inner" id="campus-tour-stops"></div>
                 </div>
             </div>
 
             <!-- CATÁLOGO: ESCENARIOS REGLAMENTARIOS -->
             <div class="section-container" id="catalogo-anchor">
                 <div class="catalogo-header-row">
-                    <div>
-                        <h2 class="catalogo-main-title">Escenarios Reglamentarios <span id="catalogo-total" class="catalogo-count">(Cargando...)</span></h2>
-                        <p class="text-muted">Selecciona el escenario de tu preferencia para consultar disponibilidad en tiempo real y apartar tu cancha.</p>
-                    </div>
+                    <h2 class="catalogo-main-title">Escenarios Reglamentarios <span id="catalogo-total" class="catalogo-count" style="display:none;"></span></h2>
 
-                    <!-- Filtros de Disciplina Limpios (Sin emojis ni iconos innecesarios) -->
                     <div class="filter-pills">
-                        <button class="pill active" data-disciplina="" onclick="app.filterDisciplina('')">
-                            Todos
-                        </button>
-                        <button class="pill" data-disciplina="FUTBOL" onclick="app.filterDisciplina('FUTBOL')">
-                            Fútbol
-                        </button>
-                        <button class="pill" data-disciplina="TENIS" onclick="app.filterDisciplina('TENIS')">
-                            Tenis
-                        </button>
-                        <button class="pill" data-disciplina="PADEL" onclick="app.filterDisciplina('PADEL')">
-                            Pádel
-                        </button>
-                        <button class="pill" data-disciplina="BALONCESTO" onclick="app.filterDisciplina('BALONCESTO')">
-                            Baloncesto
-                        </button>
+                        <button class="pill active" data-disciplina="" onclick="app.filterDisciplina('')">Todos</button>
+                        <button class="pill" data-disciplina="FUTBOL" onclick="app.filterDisciplina('FUTBOL')">Fútbol</button>
+                        <button class="pill" data-disciplina="TENIS" onclick="app.filterDisciplina('TENIS')">Tenis</button>
+                        <button class="pill" data-disciplina="PADEL" onclick="app.filterDisciplina('PADEL')">Pádel</button>
+                        <button class="pill" data-disciplina="BALONCESTO" onclick="app.filterDisciplina('BALONCESTO')">Baloncesto</button>
                     </div>
                 </div>
 
-                <div id="escenarios-grid" class="cards-grid">
-                    <!-- Tarjetas inyectadas dinámicamente con app.js -->
-                </div>
+                <div id="escenarios-grid" class="cards-grid"></div>
             </div>
         </section>
 
@@ -186,18 +125,17 @@
         <section id="section-reserva" class="content-section">
             <div class="section-container">
                 <div class="back-link" onclick="app.showSection('catalogo')">
-                    <i class="fa-solid fa-arrow-left"></i> Volver a Escenarios Reglamentarios
+                    <i class="fa-solid fa-arrow-left"></i> Volver a Escenarios
                 </div>
 
                 <div class="reserva-layout">
-                    <!-- Panel Izquierdo: Datos de la Cancha y Selector de Fecha -->
                     <div class="reserva-details-panel">
                         <div class="cancha-detail-card">
                             <img id="res-cancha-img" src="" alt="Cancha">
                             <div class="cancha-detail-body">
                                 <span class="badge badge-primary" id="res-cancha-badge">FUTBOL</span>
                                 <h2 id="res-cancha-nombre" style="margin-top: 8px;">Cargando...</h2>
-                                <p id="res-cancha-desc" class="text-muted" style="margin-top: 6px; font-size: 0.9rem;"></p>
+                                <p id="res-cancha-desc" class="text-muted" style="margin-top: 6px; font-size: 0.88rem;"></p>
                                 
                                 <div class="detail-specs">
                                     <div class="spec-item">
@@ -216,41 +154,34 @@
                             </div>
                         </div>
 
-                        <!-- Selector de Fecha -->
                         <div class="date-picker-card">
-                            <label for="fecha-reserva">Fecha del Partido</label>
+                            <label for="fecha-reserva">Fecha de Reserva</label>
                             <input type="date" id="fecha-reserva" onchange="app.onFechaChange()">
-                            <small class="helper-text">Elige el día para ver las horas disponibles en vivo.</small>
                         </div>
                     </div>
 
-                    <!-- Panel Derecho: Matriz de Franjas y Panel de Confirmación -->
                     <div class="reserva-matrix-panel">
                         <div class="matrix-card">
                             <div class="matrix-header">
                                 <div>
-                                    <h3>Selecciona tu Horario</h3>
-                                    <p class="text-muted" id="matrix-fecha-subtitle">Haz clic en cualquier bloque disponible y confirma tu reserva abajo</p>
+                                    <h3>Horarios Disponibles</h3>
+                                    <p class="text-muted" id="matrix-fecha-subtitle">Selecciona una hora para confirmar</p>
                                 </div>
                                 <div class="matrix-legend">
-                                    <span class="legend-item"><span class="legend-dot dot-libre"></span> Disponible</span>
-                                    <span class="legend-item"><span class="legend-dot dot-ocupada"></span> Reservada</span>
+                                    <span class="legend-item"><span class="legend-dot dot-libre"></span> Libre</span>
+                                    <span class="legend-item"><span class="legend-dot dot-ocupada"></span> Ocupada</span>
                                     <span class="legend-item"><span class="legend-dot dot-seleccionada"></span> Seleccionada</span>
                                 </div>
                             </div>
 
-                            <div id="franjas-grid" class="franjas-grid">
-                                <!-- Botones de franja horaria inyectados dinámicamente -->
-                            </div>
+                            <div id="franjas-grid" class="franjas-grid"></div>
 
-                            <!-- Panel de Confirmación -->
                             <div id="panel-confirmacion" class="confirmacion-box" style="display: none;">
                                 <div class="confirm-content">
                                     <div class="confirm-info">
                                         <span class="confirm-tag">Horario Seleccionado</span>
-                                        <h4>Resumen de tu Reserva</h4>
-                                        <p id="confirm-resumen">Cancha Sintética 1 - 18:00 a 19:00</p>
-                                        <div class="confirm-price">Total a Pagar: <b id="confirm-precio">$85.000 COP</b></div>
+                                        <h4 id="confirm-resumen">Cancha Sintética - 18:00 a 19:00</h4>
+                                        <div class="confirm-price">Tarifa: <b id="confirm-precio">$85.000 COP</b></div>
                                     </div>
                                     <button class="btn btn-primary btn-lg" id="btn-confirmar-reserva" onclick="app.ejecutarReserva()">
                                         Confirmar Reserva
@@ -269,15 +200,9 @@
         <section id="section-mis-reservas" class="content-section">
             <div class="section-container">
                 <div class="section-header">
-                    <div>
-                        <h2>Mis Reservas <span class="badge badge-primary" id="badge-total-reservas">0</span></h2>
-                        <p class="text-muted">Consulta tus reservas activas o cancela cuando no puedas asistir.</p>
-                    </div>
+                    <h2>Mis Reservas <span class="badge badge-primary" id="badge-total-reservas">0</span></h2>
                 </div>
-
-                <div id="mis-reservas-grid" class="reservas-grid">
-                    <!-- Reservas inyectadas dinámicamente -->
-                </div>
+                <div id="mis-reservas-grid" class="reservas-grid"></div>
             </div>
         </section>
 
@@ -288,20 +213,14 @@
             <div class="section-container">
                 <div class="section-header">
                     <div>
-                        <h2>Panel de Control del Administrador</h2>
-                        <p class="text-muted">Gestión de escenarios deportivos, estados de mantenimiento y reservas del campus (Motor MySQL 8.4).</p>
+                        <h2>Administración</h2>
+                        <p class="text-muted">Gestión de escenarios y reservas en MySQL 8.4.</p>
                     </div>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <span class="btn btn-outline" style="cursor: default;">
-                            MySQL 8.4 · canchas_db
-                        </span>
-                        <button class="btn btn-primary" onclick="app.openModalCrearEscenario()">
-                            Registrar Nuevo Escenario
-                        </button>
-                    </div>
+                    <button class="btn btn-primary" onclick="app.openModalCrearEscenario()">
+                        Nuevo Escenario
+                    </button>
                 </div>
 
-                <!-- Tarjetas KPI del Administrador -->
                 <div class="admin-kpi-grid">
                     <div class="kpi-card">
                         <div>
@@ -311,36 +230,34 @@
                     </div>
                     <div class="kpi-card">
                         <div>
-                            <span class="kpi-label">Canchas Habilitadas</span>
+                            <span class="kpi-label">Habilitadas</span>
                             <b class="kpi-value" id="kpi-canchas-activas">0</b>
                         </div>
                     </div>
                     <div class="kpi-card">
                         <div>
-                            <span class="kpi-label">En Mantenimiento</span>
+                            <span class="kpi-label">Mantenimiento</span>
                             <b class="kpi-value" id="kpi-canchas-mantenimiento">0</b>
                         </div>
                     </div>
                     <div class="kpi-card">
                         <div>
-                            <span class="kpi-label">Aforo Simultáneo</span>
+                            <span class="kpi-label">Capacidad Total</span>
                             <b class="kpi-value" id="kpi-aforo-total">0</b>
                         </div>
                     </div>
                 </div>
 
-                <!-- Pestañas del Administrador -->
                 <div class="admin-tabs">
                     <button class="admin-tab-btn active" id="tab-btn-escenarios" onclick="app.switchAdminTab('escenarios')">
-                        Gestión de Escenarios y Mantenimiento
+                        Escenarios
                     </button>
                     <button class="admin-tab-btn" id="tab-btn-reservas" onclick="app.switchAdminTab('reservas')">
-                        Monitor Global de Reservas
+                        Reservas Globales
                         <span class="badge-count" id="count-global-reservas">0</span>
                     </button>
                 </div>
 
-                <!-- Pestaña 1: Tabla de Escenarios Admin -->
                 <div id="admin-view-escenarios">
                     <div class="table-card">
                         <table class="data-table">
@@ -353,35 +270,30 @@
                                     <th>Aforo</th>
                                     <th>Tarifa/h</th>
                                     <th>Estado</th>
-                                    <th>Acciones Rápidas</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-escenarios-tbody">
-                                <!-- Inyectado por app.js -->
-                            </tbody>
+                            <tbody id="admin-escenarios-tbody"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Pestaña 2: Monitor Global de Reservas del Sistema -->
                 <div id="admin-view-reservas" style="display: none;">
                     <div class="table-card">
                         <table class="data-table">
                             <thead>
                                 <tr>
                                     <th>Código</th>
-                                    <th>Usuario / Deportista</th>
+                                    <th>Deportista</th>
                                     <th>Escenario</th>
                                     <th>Fecha</th>
                                     <th>Horario</th>
                                     <th>Total</th>
                                     <th>Estado</th>
-                                    <th>Acción Administrativa</th>
+                                    <th>Acción</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-reservas-tbody">
-                                <!-- Inyectado por app.js -->
-                            </tbody>
+                            <tbody id="admin-reservas-tbody"></tbody>
                         </table>
                     </div>
                 </div>
@@ -389,11 +301,9 @@
         </section>
     </main>
 
-    <!-- ========================================== -->
     <!-- WIDGET FLOTANTE ASISTENTE IA -->
-    <!-- ========================================== -->
     <div id="sportbot-widget" class="sportbot-container">
-        <button id="sportbot-fab" class="sportbot-fab" onclick="app.toggleChatIa()" title="Abrir Asistente Deportivo IA">
+        <button id="sportbot-fab" class="sportbot-fab" onclick="app.toggleChatIa()" title="Asistente IA">
             <span class="live-pulse-dot"></span>
             <span>Asistente IA</span>
         </button>
@@ -402,24 +312,24 @@
             <div class="chat-header">
                 <div class="chat-header-info">
                     <div>
-                        <div class="chat-title">Asistente Deportivo Javeriana</div>
-                        <div class="chat-status"><span class="status-dot"></span> En línea · Reservas autónomas</div>
+                        <div class="chat-title">Asistente Javeriana</div>
+                        <div class="chat-status"><span class="status-dot"></span> En línea</div>
                     </div>
                 </div>
                 <button class="chat-close-btn" onclick="app.toggleChatIa(false)">&times;</button>
             </div>
 
             <div class="chat-chips-bar">
-                <button class="chip-btn" onclick="app.enviarSugerenciaIa('¿Qué canchas de fútbol hay hoy?')">Fútbol hoy</button>
-                <button class="chip-btn" onclick="app.enviarSugerenciaIa('Quiero jugar tenis mañana a las 4pm')">Tenis 4:00 PM</button>
-                <button class="chip-btn" onclick="app.enviarSugerenciaIa('Quiero jugar pádel hoy a las 6pm')">Pádel 6:00 PM</button>
+                <button class="chip-btn" onclick="app.enviarSugerenciaIa('¿Qué canchas de fútbol hay hoy?')">Fútbol</button>
+                <button class="chip-btn" onclick="app.enviarSugerenciaIa('Quiero jugar tenis mañana a las 4pm')">Tenis</button>
+                <button class="chip-btn" onclick="app.enviarSugerenciaIa('Quiero jugar pádel hoy a las 6pm')">Pádel</button>
                 <button class="chip-btn" onclick="app.enviarSugerenciaIa('Quiero reservar el coliseo de baloncesto')">Baloncesto</button>
             </div>
 
             <div id="chat-messages-container" class="chat-messages">
                 <div class="chat-msg bot-msg">
                     <div class="msg-bubble">
-                        Hola. ¿Qué escenario deportivo deseas reservar hoy? Indícame la disciplina y el horario de tu preferencia.
+                        Hola. ¿Qué cancha y horario deseas reservar?
                     </div>
                 </div>
             </div>
@@ -433,21 +343,18 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- MODAL DE CONFIRMACIÓN DE RESERVA Y CORREO -->
-    <!-- ========================================== -->
+    <!-- MODAL DE CONFIRMACIÓN DE RESERVA -->
     <div id="modal-exito-reserva" class="modal-overlay" style="display: none;">
         <div class="modal-box modal-success-box">
             <button class="modal-close" onclick="app.closeModal('modal-exito-reserva')">&times;</button>
             <div class="success-header">
                 <div class="success-icon"><i class="fa-solid fa-check"></i></div>
                 <h3>Reserva Confirmada</h3>
-                <p class="text-muted">Tu escenario deportivo ha quedado apartado exitosamente.</p>
             </div>
 
             <div class="receipt-card">
                 <div class="receipt-code-badge">
-                    <span>CÓDIGO OFICIAL DE RESERVA</span>
+                    <span>CÓDIGO</span>
                     <b id="receipt-codigo">RES-XXXXXXXX</b>
                 </div>
 
@@ -481,14 +388,13 @@
                 <div class="email-sent-badge">
                     <i class="fa-solid fa-envelope-circle-check"></i>
                     <div>
-                        <b>Comprobante enviado por correo electrónico</b>
-                        <span>Se enviaron los detalles y la fecha programada a tu correo registrado.</span>
+                        <b>Confirmación enviada a tu correo</b>
                     </div>
                 </div>
             </div>
 
             <div class="modal-actions" style="margin-top: 20px;">
-                <button class="btn btn-outline" onclick="app.closeModal('modal-exito-reserva')">Seguir explorando</button>
+                <button class="btn btn-outline" onclick="app.closeModal('modal-exito-reserva')">Cerrar</button>
                 <button class="btn btn-primary" onclick="app.showSection('mis-reservas'); app.closeModal('modal-exito-reserva');">
                     Ver Mis Reservas
                 </button>
@@ -496,19 +402,16 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- MODAL DE AUTENTICACIÓN (LOGIN / REGISTRO) -->
-    <!-- ========================================== -->
+    <!-- MODAL DE AUTENTICACIÓN -->
     <div id="modal-auth" class="modal-overlay" style="display: none;">
         <div class="modal-box">
             <button class="modal-close" onclick="app.closeModal('modal-auth')">&times;</button>
             <div class="modal-header">
                 <img src="logo-javeriana.png" alt="Pontificia Universidad Javeriana" class="modal-javeriana-logo">
                 <h3 id="auth-modal-title">Iniciar Sesión</h3>
-                <p class="text-muted" id="auth-modal-subtitle">Accede para confirmar tu reserva deportiva</p>
+                <p class="text-muted" id="auth-modal-subtitle">Accede para confirmar tu reserva</p>
             </div>
 
-            <!-- Formulario Login -->
             <form id="form-login" onsubmit="app.handleLogin(event)">
                 <div class="form-group">
                     <label>Correo Electrónico</label>
@@ -522,32 +425,30 @@
                     Iniciar Sesión
                 </button>
                 <div class="modal-footer-text">
-                    ¿No tienes cuenta? <a href="#" onclick="app.switchAuthMode('register')">Regístrate aquí</a>
+                    ¿No tienes cuenta? <a href="#" onclick="app.switchAuthMode('register')">Regístrate</a>
                 </div>
-                <!-- Cuentas de demostración rápida para evaluación -->
                 <div class="demo-accounts-box">
-                    <span><b>Ingreso rápido en 1 clic (selecciona tu usuario):</b></span>
+                    <span><b>Acceso directo:</b></span>
                     <div class="demo-pills">
                         <button type="button" class="btn-demo" onclick="app.loginDirectoDemo('nicolas@canchas.com', 'user123')">
-                            Entrar como Nicolás Cardozo
+                            Nicolás Cardozo
                         </button>
                         <button type="button" class="btn-demo" onclick="app.loginDirectoDemo('samuel@canchas.com', 'user123')">
-                            Entrar como Samuel Correa
+                            Samuel Correa
                         </button>
                         <button type="button" class="btn-demo" onclick="app.loginDirectoDemo('espinosa@canchas.com', 'user123')">
-                            Entrar como Nicolás Espinosa
+                            Nicolás Espinosa
                         </button>
                         <button type="button" class="btn-demo" onclick="app.loginDirectoDemo('gustavo@canchas.com', 'user123')">
-                            Entrar como Gustavo Mejía
+                            Gustavo Mejía
                         </button>
                         <button type="button" class="btn-demo" onclick="app.loginDirectoDemo('admin@canchas.com', 'admin123')">
-                            Entrar como Administrador
+                            Administrador
                         </button>
                     </div>
                 </div>
             </form>
 
-            <!-- Formulario Registro -->
             <form id="form-register" onsubmit="app.handleRegister(event)" style="display: none;">
                 <div class="form-row">
                     <div class="form-group">
@@ -571,7 +472,7 @@
                     <div class="form-group">
                         <label>Rol</label>
                         <select id="reg-rol">
-                            <option value="ROLE_USER">Deportista (Usuario)</option>
+                            <option value="ROLE_USER">Deportista</option>
                             <option value="ROLE_ADMIN">Administrador</option>
                         </select>
                     </div>
@@ -590,22 +491,19 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
     <!-- MODAL CREAR / EDITAR ESCENARIO -->
-    <!-- ========================================== -->
     <div id="modal-escenario" class="modal-overlay" style="display: none;">
         <div class="modal-box modal-lg">
             <button class="modal-close" onclick="app.closeModal('modal-escenario')">&times;</button>
             <div class="modal-header">
-                <h3 id="modal-escenario-title">Registrar Nuevo Escenario</h3>
-                <p class="text-muted">Ingresa los datos de la cancha deportiva.</p>
+                <h3 id="modal-escenario-title">Escenario Deportivo</h3>
             </div>
             <form id="form-escenario" onsubmit="app.guardarEscenario(event)">
                 <input type="hidden" id="esc-id">
                 <div class="form-row">
                     <div class="form-group flex-2">
-                        <label>Nombre del Escenario</label>
-                        <input type="text" id="esc-nombre" required placeholder="Ej. Cancha Sintética 2">
+                        <label>Nombre</label>
+                        <input type="text" id="esc-nombre" required>
                     </div>
                     <div class="form-group">
                         <label>Disciplina</label>
@@ -630,68 +528,63 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Aforo (Personas)</label>
+                        <label>Aforo</label>
                         <input type="number" id="esc-aforo" required min="1" value="10">
                     </div>
                     <div class="form-group">
-                        <label>Tarifa por Hora (COP)</label>
+                        <label>Tarifa / Hora (COP)</label>
                         <input type="number" id="esc-tarifa" required min="1000" step="1000" value="80000">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label>URL de Imagen</label>
-                    <input type="text" id="esc-imagen" placeholder="/futbol8.jpg">
+                    <input type="text" id="esc-imagen">
                 </div>
 
                 <div class="form-group">
-                    <label>Descripción de Instalaciones</label>
-                    <textarea id="esc-desc" rows="3" placeholder="Detalles de la cancha, iluminación, drenaje..."></textarea>
+                    <label>Descripción</label>
+                    <textarea id="esc-desc" rows="2"></textarea>
                 </div>
 
                 <div class="form-row">
                     <div class="form-checkbox">
                         <input type="checkbox" id="esc-luz" checked>
-                        <label for="esc-luz">Iluminación Nocturna Disponible</label>
+                        <label for="esc-luz">Iluminación LED</label>
                     </div>
                     <div class="form-checkbox">
                         <input type="checkbox" id="esc-mantenimiento">
-                        <label for="esc-mantenimiento">En Mantenimiento (Bloquea Reservas)</label>
+                        <label for="esc-mantenimiento">En Mantenimiento</label>
                     </div>
                 </div>
 
                 <div class="modal-actions">
                     <button type="button" class="btn btn-outline" onclick="app.closeModal('modal-escenario')">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar Escenario</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- ========================================== -->
     <!-- MODAL CONFIRMAR CANCELACIÓN -->
-    <!-- ========================================== -->
     <div id="modal-cancelar" class="modal-overlay" style="display: none;">
         <div class="modal-box">
             <button class="modal-close" onclick="app.closeModal('modal-cancelar')">&times;</button>
             <div class="modal-header">
-                <h3>¿Cancelar esta reserva?</h3>
-                <p class="text-muted">El horario quedará libre de inmediato para otros usuarios.</p>
+                <h3>¿Cancelar reserva?</h3>
             </div>
             <input type="hidden" id="cancel-reserva-id">
             <div class="form-group">
-                <label>Motivo de Cancelación (Opcional)</label>
-                <input type="text" id="cancel-motivo" placeholder="Ej. Lluvia, imprevisto personal...">
+                <label>Motivo (Opcional)</label>
+                <input type="text" id="cancel-motivo">
             </div>
             <div class="modal-actions">
                 <button type="button" class="btn btn-outline" onclick="app.closeModal('modal-cancelar')">Volver</button>
-                <button type="button" class="btn btn-danger" onclick="app.ejecutarCancelacion()">
-                    Sí, Cancelar Reserva
-                </button>
+                <button type="button" class="btn btn-danger" onclick="app.ejecutarCancelacion()">Cancelar Reserva</button>
             </div>
         </div>
     </div>
 
-    <script src="app.js?v=dark4"></script>
+    <script src="app.js?v=clean5"></script>
 </body>
 </html>

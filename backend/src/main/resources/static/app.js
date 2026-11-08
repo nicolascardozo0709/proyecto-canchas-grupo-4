@@ -29,95 +29,51 @@ const app = {
     pendingAiReserva: null,
     currentCampusSlide: 0,
     campusTimer: null,
-    campusAutoplay: true,
-    nightVisionActive: false,
     campusSlides: [
         {
-            badge: 'VISTA GENERAL DEL CAMPUS',
+            badge: 'CAMPUS JAVERIANA',
             title: 'Centro Javeriano de Formación Deportiva',
-            desc: 'Explora interactivamente nuestro complejo deportivo. Haz clic en los puntos del mapa o selecciona un escenario en la barra inferior.',
+            desc: 'Escenarios deportivos reglamentarios de fútbol, tenis, pádel y baloncesto.',
             image: '/campus-javeriana.jpg',
-            label: 'Campus General',
-            sub: 'Mapa Interactivo',
-            surface: '5 Escenarios Oficiales',
-            light: 'LED 1200 Lux',
-            price: 'Desde $60.000/h',
+            label: 'Vista del Campus',
             escenarioDisciplina: null,
-            ctaText: 'Explorar Escenarios Reglamentarios',
-            hotspots: [
-                { x: '28%', y: '52%', text: 'El Campincito · Fútbol 8', targetSlide: 1 },
-                { x: '52%', y: '38%', text: 'Court Central de Tenis', targetSlide: 2 },
-                { x: '72%', y: '58%', text: 'Pádel Panorámico', targetSlide: 3 },
-                { x: '82%', y: '30%', text: 'Coliseo de Baloncesto', targetSlide: 4 }
-            ]
+            ctaText: 'Ver Escenarios'
         },
         {
-            badge: 'FÚTBOL 8 SINTÉTICO',
+            badge: 'FÚTBOL 8',
             title: 'Cancha Sintética El Campincito',
-            desc: 'Grama sintética monofilamento FIFA Quality Pro con sistema de drenaje pluvial y torres de iluminación LED.',
-            image: '/futbol8.jpg',
+            desc: 'Grama sintética de última generación con iluminación LED.',
+            image: '/futbol8.jpg?v=clean5',
             label: 'El Campincito',
-            sub: 'Fútbol 8 • $85.000/h',
-            surface: 'Grama Sintética Pro',
-            light: 'Reflectores LED',
-            price: '$85.000 / hora',
             escenarioDisciplina: 'FUTBOL',
-            ctaText: 'Reservar Cancha de Fútbol',
-            hotspots: [
-                { x: '48%', y: '62%', text: 'Grama Monofilamento Pro', action: 'book' },
-                { x: '70%', y: '28%', text: 'Torres LED Nocturnas', action: 'night' }
-            ]
+            ctaText: 'Reservar Cancha'
         },
         {
-            badge: 'TENIS DE CAMPO',
+            badge: 'TENIS',
             title: 'Court Central de Tenis',
-            desc: 'Superficie profesional en polvo de ladrillo tamizado con cerramiento cortavientos y drenaje rápido.',
+            desc: 'Superficie reglamentaria en polvo de ladrillo.',
             image: '/tenis.jpg?v=vip3',
             label: 'Court de Tenis',
-            sub: 'Arcilla • $60.000/h',
-            surface: 'Polvo de Ladrillo',
-            light: 'Iluminación Perimetral',
-            price: '$60.000 / hora',
             escenarioDisciplina: 'TENIS',
-            ctaText: 'Reservar Court de Tenis',
-            hotspots: [
-                { x: '50%', y: '68%', text: 'Arcilla Reglamentaria ITF', action: 'book' },
-                { x: '35%', y: '48%', text: 'Cortavientos Perimetral', action: 'book' }
-            ]
+            ctaText: 'Reservar Cancha'
         },
         {
-            badge: 'PÁDEL PANORÁMICO',
+            badge: 'PÁDEL',
             title: 'Cancha de Pádel Panorámica',
-            desc: 'Cerramiento en cristal templado de 12 mm, estructura negra mate y tapete azul rey de alto agarre.',
+            desc: 'Cerramiento en cristal templado de 12 mm y tapete azul rey.',
             image: '/padel.png?v=vip3',
-            label: 'Pádel Cristal',
-            sub: 'Pádel • $70.000/h',
-            surface: 'Tapete WPT Azul Rey',
-            light: 'LED Lineal Integrado',
-            price: '$70.000 / hora',
+            label: 'Pádel Panorámico',
             escenarioDisciplina: 'PADEL',
-            ctaText: 'Reservar Cancha de Pádel',
-            hotspots: [
-                { x: '50%', y: '65%', text: 'Tapete Monofilamento Azul', action: 'book' },
-                { x: '74%', y: '26%', text: 'Luminaria LED Lineal', action: 'night' }
-            ]
+            ctaText: 'Reservar Cancha'
         },
         {
-            badge: 'BALONCESTO PROFESIONAL',
+            badge: 'BALONCESTO',
             title: 'Coliseo Cubierto de Baloncesto',
-            desc: 'Arena cubierta con maderamen flotante de arce certificado FIBA, tableros de vidrio templado y gradería.',
-            image: '/coliseo.jpg',
+            desc: 'Maderamen flotante profesional FIBA e iluminación cubierta.',
+            image: '/coliseo.jpg?v=clean5',
             label: 'Coliseo Baloncesto',
-            sub: 'Baloncesto • $90.000/h',
-            surface: 'Maderamen Maple FIBA',
-            light: 'Cubierto Climatizado',
-            price: '$90.000 / hora',
             escenarioDisciplina: 'BALONCESTO',
-            ctaText: 'Reservar Coliseo de Baloncesto',
-            hotspots: [
-                { x: '52%', y: '64%', text: 'Maderamen Flotante FIBA', action: 'book' },
-                { x: '68%', y: '42%', text: 'Tableros Oficiales Cristal', action: 'book' }
-            ]
+            ctaText: 'Reservar Cancha'
         }
     ],
 
@@ -131,53 +87,10 @@ const app = {
     initCampusTour() {
         this.renderCampusTourStops();
         this.setCampusSlide(0, false);
-        this.startCampusTimer();
-    },
-
-    startCampusTimer() {
         if (this.campusTimer) clearInterval(this.campusTimer);
-        if (!this.campusAutoplay) return;
         this.campusTimer = setInterval(() => {
             this.nextCampusSlide(false);
         }, 5500);
-    },
-
-    toggleCampusAutoplay() {
-        this.campusAutoplay = !this.campusAutoplay;
-        const label = document.getElementById('autoplay-label');
-        const btn = document.getElementById('btn-toggle-autoplay');
-        if (label) label.textContent = this.campusAutoplay ? 'Auto-Tour: Activo' : 'Auto-Tour: Pausado';
-        if (btn) btn.classList.toggle('active', !this.campusAutoplay);
-        if (this.campusAutoplay) {
-            this.startCampusTimer();
-        } else if (this.campusTimer) {
-            clearInterval(this.campusTimer);
-        }
-    },
-
-    toggleNightVision() {
-        this.nightVisionActive = !this.nightVisionActive;
-        const stage = document.getElementById('campus-stage');
-        const btn = document.getElementById('btn-toggle-night');
-        const label = document.getElementById('night-mode-label');
-        if (stage) stage.classList.toggle('night-vision', this.nightVisionActive);
-        if (btn) btn.classList.toggle('active', this.nightVisionActive);
-        if (label) label.textContent = this.nightVisionActive ? 'Vista Diurna' : 'Modo Nocturno LED';
-    },
-
-    handleStageParallax(e) {
-        const stage = document.getElementById('campus-stage');
-        const img = document.getElementById('campus-stage-img');
-        if (!stage || !img) return;
-        const rect = stage.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width - 0.5;
-        const y = (e.clientY - rect.top) / rect.height - 0.5;
-        img.style.transform = `scale(1.07) translate(${-x * 16}px, ${-y * 12}px)`;
-    },
-
-    resetStageParallax() {
-        const img = document.getElementById('campus-stage-img');
-        if (img) img.style.transform = 'scale(1.05) translate(0px, 0px)';
     },
 
     renderCampusTourStops() {
@@ -187,7 +100,6 @@ const app = {
             <div class="campus-stop-card ${idx === this.currentCampusSlide ? 'active' : ''}" onclick="app.setCampusSlide(${idx}, true)">
                 <img src="${s.image}" alt="${escapeHtml(s.label)}" class="campus-stop-thumb">
                 <div class="campus-stop-info">
-                    <span class="campus-stop-zone">${escapeHtml(s.sub)}</span>
                     <span class="campus-stop-title">${escapeHtml(s.label)}</span>
                 </div>
                 <div class="campus-stop-progress"></div>
@@ -202,45 +114,27 @@ const app = {
 
         const slide = this.campusSlides[idx];
         const imgEl = document.getElementById('campus-stage-img');
-        const badgeEl = document.getElementById('campus-slide-tag') || document.getElementById('campus-slide-badge');
+        const badgeEl = document.getElementById('campus-slide-tag');
         const titleEl = document.getElementById('campus-slide-title');
         const descEl = document.getElementById('campus-slide-desc');
         const ctaEl = document.getElementById('campus-slide-cta');
-        const surfEl = document.getElementById('hud-spec-surface');
-        const lightEl = document.getElementById('hud-spec-light');
-        const priceEl = document.getElementById('hud-spec-price');
-        const hotspotsEl = document.getElementById('campus-hotspots-layer');
 
         if (imgEl) imgEl.src = slide.image;
-        if (badgeEl) badgeEl.innerHTML = `<span class="live-pulse-dot"></span><span>${escapeHtml(slide.badge)}</span>`;
+        if (badgeEl) badgeEl.textContent = slide.badge;
         if (titleEl) titleEl.textContent = slide.title;
         if (descEl) descEl.textContent = slide.desc;
         if (ctaEl) ctaEl.textContent = slide.ctaText;
-        if (surfEl) surfEl.textContent = slide.surface;
-        if (lightEl) lightEl.textContent = slide.light;
-        if (priceEl) priceEl.textContent = slide.price;
-
-        if (hotspotsEl && slide.hotspots) {
-            hotspotsEl.innerHTML = slide.hotspots.map(h => {
-                const clickHandler = h.targetSlide !== undefined
-                    ? `app.setCampusSlide(${h.targetSlide}, true)`
-                    : (h.action === 'night' ? `app.toggleNightVision()` : `app.accionPrincipalSlide()`);
-                return `
-                    <button type="button" class="stage-hotspot" style="left:${h.x}; top:${h.y};" onclick="${clickHandler}">
-                        <span class="hotspot-ping"></span>
-                        <span>${escapeHtml(h.text)}</span>
-                    </button>
-                `;
-            }).join('');
-        }
 
         document.querySelectorAll('.campus-stop-card').forEach((card, i) => {
             if (i === idx) card.classList.add('active');
             else card.classList.remove('active');
         });
 
-        if (manual && this.campusAutoplay) {
-            this.startCampusTimer();
+        if (manual && this.campusTimer) {
+            clearInterval(this.campusTimer);
+            this.campusTimer = setInterval(() => {
+                this.nextCampusSlide(false);
+            }, 6500);
         }
     },
 
@@ -544,41 +438,25 @@ const app = {
             return `
                 <div class="cancha-card">
                     <div class="card-image-box">
-                        <img src="${escapeHtml(esc.imagenUrl) || 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=800'}" alt="${escapeHtml(esc.nombre)}">
+                        <img src="${escapeHtml(esc.imagenUrl) || '/futbol8.jpg'}" alt="${escapeHtml(esc.nombre)}">
                         <span class="badge badge-tag">${escapeHtml(esc.disciplina)}</span>
-                        ${enMantenimiento ? '<span class="badge badge-mantenimiento"><i class="fa-solid fa-wrench"></i> MANTENIMIENTO</span>' : ''}
+                        ${enMantenimiento ? '<span class="badge badge-mantenimiento">MANTENIMIENTO</span>' : ''}
                     </div>
                     <div class="card-body">
                         <h3 class="card-title">${escapeHtml(esc.nombre)}</h3>
-                        <p class="card-desc">${escapeHtml(esc.descripcion || 'Escenario deportivo equipado con especificaciones de alto nivel.')}</p>
-                        
-                        <div class="card-features">
-                            <div class="feature-pill">
-                                <span>Superficie</span>
-                                <b>${escapeHtml(esc.superficie)}</b>
-                            </div>
-                            <div class="feature-pill">
-                                <span>Capacidad</span>
-                                <b>${escapeHtml(esc.aforo)} jug.</b>
-                            </div>
-                            <div class="feature-pill">
-                                <span>Iluminación</span>
-                                <b>${esc.iluminacion ? 'LED Nocturna' : 'Diurna'}</b>
-                            </div>
-                        </div>
+                        <p class="card-meta-line">${escapeHtml(esc.superficie)} &middot; ${escapeHtml(esc.aforo)} jugadores &middot; ${esc.iluminacion ? 'Iluminación LED' : 'Luz diurna'}</p>
 
                         <div class="card-footer">
                             <div class="card-price">
-                                <span class="price-label">Tarifa por hora</span>
-                                <span class="price-value">${precioFormatted}</span>
+                                <span class="price-value">${precioFormatted} <small class="price-unit">/ hora</small></span>
                             </div>
                             ${enMantenimiento ? `
-                                <button class="btn btn-outline btn-sm" disabled style="opacity:0.6; cursor:not-allowed;">
-                                    <i class="fa-solid fa-lock"></i> Mantenimiento
+                                <button class="btn btn-outline btn-sm" disabled style="opacity:0.5; cursor:not-allowed;">
+                                    No disponible
                                 </button>
                             ` : `
                                 <button class="btn btn-primary" onclick="app.iniciarFlujoReserva(${esc.id})">
-                                    <i class="fa-solid fa-calendar-plus"></i> Reservar
+                                    Reservar
                                 </button>
                             `}
                         </div>
