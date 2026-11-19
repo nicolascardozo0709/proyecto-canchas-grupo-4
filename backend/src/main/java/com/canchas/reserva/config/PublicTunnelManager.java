@@ -36,6 +36,9 @@ public class PublicTunnelManager {
 
     @EventListener(ApplicationReadyEvent.class)
     public void startPublicTunnel() {
+        if (serverPort <= 0) {
+            return;
+        }
         // Buscar el ejecutable de cloudflared en las carpetas del proyecto
         Path[] searchPaths = new Path[]{
             Paths.get("tools", "cloudflared.exe"),

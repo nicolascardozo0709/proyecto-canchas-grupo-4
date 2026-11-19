@@ -47,6 +47,19 @@ Para garantizar la robustez, integridad y confiabilidad requeridas por la rúbri
 | **Protección Clickjacking** (X-Frame-Options SAMEORIGIN) | `CorsAndSecurityTest` | `cabecerasSeguridad_ContieneFrameOptionsSameOrigin()` | Seguridad | **EXITOSA** |
 | **CORS Preflight** (Orígenes y Credenciales Permitidas) | `CorsAndSecurityTest` | `corsPreflight_OrigenPermitido_RetornaCabecerasValidas()` | Seguridad/CORS | **EXITOSA** |
 | **Concurrencia Extrema** (8 hilos en paralelo) | `AntiColisionConcurrencyTest` | `testConcurrenciaAntiOverbooking()` | Concurrencia | **EXITOSA** |
+| **HU-09** (Ocupación por Escenario e Ingresos) | `ReporteServiceTest` | `ocupacionPorEscenario()` | Unitaria | **EXITOSA** |
+| **HU-09** (Ocupación Agregada por Franja Horaria) | `ReporteServiceTest` | `ocupacionPorFranja()` | Unitaria | **EXITOSA** |
+| **HU-10 & HU-17** (Demanda por Día, Día Pico y Hora Pico) | `ReporteServiceTest` | `demandaPorDiaYHora()` | Unitaria | **EXITOSA** |
+| **HU-09** (Manejo Seguro Sin Datos / División por Cero) | `ReporteServiceTest` | `sinDatos()` | Unitaria | **EXITOSA** |
+| **HU-11** (Validación Rango de Fechas Invertido) | `ReporteServiceTest` | `rangoInvertido()` | Unitaria | **EXITOSA** |
+| **HU-12** (Generación CSV con Separador Configurable) | `ReporteServiceTest` | `csvBasico()` | Unitaria | **EXITOSA** |
+| **HU-12** (Rechazo de Separador CSV Inválido) | `ReporteServiceTest` | `csvSeparadorInvalido()` | Unitaria | **EXITOSA** |
+| **HU-12** (Escapado RFC 4180 de Comillas y Saltos) | `ReporteServiceTest` | `csvEscapado()` | Unitaria | **EXITOSA** |
+| **Seguridad CSV** (Mitigación de CSV Formula Injection) | `ReporteServiceTest` | `csvInyeccionDeFormulas()` | Seguridad/Unitaria | **EXITOSA** |
+| **HU-09** (Redondeo Matemático de Porcentajes) | `ReporteServiceTest` | `porcentaje()` | Unitaria | **EXITOSA** |
+| **HU-18** (Control de Acceso RBAC en `/api/reportes/**`) | `ReporteIntegrationTest` | `soloAdministrador()` | Seguridad/Integración | **EXITOSA** |
+| **HU-09 a HU-12** (Flujo E2E: Filtros, Estadísticas y CSV BOM) | `ReporteIntegrationTest` | `flujoReporteCompleto()` | Integración | **EXITOSA** |
+| **Seguridad y Validación** (Privacidad de Hashes y Rango 400) | `ReporteIntegrationTest` | `validacionesYPrivacidad()` | Integración | **EXITOSA** |
 
 ---
 

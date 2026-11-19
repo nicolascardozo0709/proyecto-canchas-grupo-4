@@ -61,3 +61,5 @@ data/
 *.lock.db
 URL_PUBLICA_ACTIVA.txt
 backend/URL_PUBLICA_ACTIVA.txt
+*.pdf
+

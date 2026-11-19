@@ -249,7 +249,7 @@ public class ReservaService {
         return mapToResponse(reserva);
     }
 
-    private ReservaResponse mapToResponse(Reserva reserva) {
+    public ReservaResponse mapToResponse(Reserva reserva) {
         return new ReservaResponse(
             reserva.getId(),
             reserva.getCodigoReserva(),

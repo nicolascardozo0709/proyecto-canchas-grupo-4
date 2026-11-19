@@ -1,7 +1,7 @@
 {
   "info": {
     "_postman_id": "c8a4192b-8a1e-45fd-993d-d421fbcf0281",
-    "name": "Reserva Canchas Javeriana - Entrega 2 (API REST & Concurrencia)",
+    "name": "Reserva Canchas Javeriana - Entrega 3 Final (API REST, Concurrencia y Reportes CSV)",
     "description": "Colección completa de pruebas para la Plataforma de Reserva de Escenarios Deportivos (Pontificia Universidad Javeriana).\n\nIntegrantes Grupo 4:\n- Nicolás Cardozo Mejía\n- Samuel Correa\n- Nicolás Espinosa Soler\n- Gustavo Mejía\n\nIncluye pruebas automatizadas en JavaScript para captura automática de token JWT, validación de anti-overbooking (409 Conflict), control de fechas pasadas (400 Bad Request) y liberación atómica en cancelación.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
@@ -66,8 +66,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             }
           }
         },
@@ -106,8 +112,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             }
           }
         },
@@ -140,8 +152,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             }
           }
         },
@@ -174,8 +192,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             }
           }
         },
@@ -208,8 +232,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             }
           }
         },
@@ -229,8 +259,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/registro",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "registro"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "registro"
+              ]
             }
           }
         }
@@ -263,8 +299,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/escenarios",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "escenarios"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "escenarios"
+              ]
             }
           }
         },
@@ -275,8 +316,14 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/escenarios/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "escenarios", "1"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "escenarios",
+                "1"
+              ]
             }
           }
         },
@@ -292,8 +339,15 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/api/escenarios/1/mantenimiento?enMantenimiento=true",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "escenarios", "1", "mantenimiento"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "escenarios",
+                "1",
+                "mantenimiento"
+              ],
               "query": [
                 {
                   "key": "enMantenimiento",
@@ -315,8 +369,15 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/api/escenarios/1/mantenimiento?enMantenimiento=false",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "escenarios", "1", "mantenimiento"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "escenarios",
+                "1",
+                "mantenimiento"
+              ],
               "query": [
                 {
                   "key": "enMantenimiento",
@@ -355,8 +416,15 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/franjas/escenario/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "franjas", "escenario", "1"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "franjas",
+                "escenario",
+                "1"
+              ]
             }
           }
         }
@@ -372,8 +440,14 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/reservas/disponibilidad?escenarioId=1&fecha=2026-10-25",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "reservas", "disponibilidad"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reservas",
+                "disponibilidad"
+              ],
               "query": [
                 {
                   "key": "escenarioId",
@@ -426,8 +500,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/reservas",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "reservas"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reservas"
+              ]
             }
           }
         },
@@ -468,8 +547,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/reservas",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "reservas"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reservas"
+              ]
             }
           }
         },
@@ -506,8 +590,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/reservas",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "reservas"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reservas"
+              ]
             }
           }
         },
@@ -540,8 +629,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/api/reservas/mis-reservas",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "reservas", "mis-reservas"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reservas",
+                "mis-reservas"
+              ]
             }
           }
         },
@@ -582,8 +677,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/reservas/{{reserva_id}}/cancelar",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "reservas", "{{reserva_id}}", "cancelar"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reservas",
+                "{{reserva_id}}",
+                "cancelar"
+              ]
             }
           }
         },
@@ -620,8 +722,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/reservas",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "reservas"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reservas"
+              ]
             }
           }
         },
@@ -637,8 +744,100 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/api/reservas",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "reservas"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reservas"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Estadísticas, Demanda y Reporte CSV (Entrega 3 - HU-09 a HU-12)",
+      "item": [
+        {
+          "name": "5.1 Estadísticas de Ocupación y Demanda (HU-09, HU-10)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reportes/estadisticas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reportes",
+                "estadisticas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.2 Reporte Filtrable de Reservas (HU-11)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reportes/reservas?estado=CONFIRMADA",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reportes",
+                "reservas"
+              ],
+              "query": [
+                {
+                  "key": "estado",
+                  "value": "CONFIRMADA"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.3 Exportar Reporte a CSV para Excel (HU-12)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reportes/reservas/csv?separador=;",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reportes",
+                "reservas",
+                "csv"
+              ],
+              "query": [
+                {
+                  "key": "separador",
+                  "value": ";"
+                }
+              ]
             }
           }
         }

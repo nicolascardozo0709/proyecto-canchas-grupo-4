@@ -62,6 +62,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/franjas/**").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/franjas/**").hasAuthority("ROLE_ADMIN")
 
+                // Funcionalidades de datos: estadísticas, gráficos y reporte CSV (Solo ADMIN)
+                .requestMatchers("/api/reportes/**").hasAuthority("ROLE_ADMIN")
+
                 // Operaciones de Reserva (Usuarios autenticados: USER o ADMIN)
                 .requestMatchers("/api/reservas/**").authenticated()
                 .requestMatchers("/api/usuarios/**").authenticated()

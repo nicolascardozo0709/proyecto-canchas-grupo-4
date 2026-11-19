@@ -806,23 +806,296 @@ const app = {
     },
 
     switchAdminTab(tab) {
-        const viewEsc = document.getElementById('admin-view-escenarios');
-        const viewRes = document.getElementById('admin-view-reservas');
-        const btnEsc = document.getElementById('tab-btn-escenarios');
-        const btnRes = document.getElementById('tab-btn-reservas');
+        ['escenarios', 'reservas', 'reportes'].forEach(t => {
+            const view = document.getElementById(`admin-view-${t}`);
+            const btn = document.getElementById(`tab-btn-${t}`);
+            if (view) view.style.display = (t === tab) ? 'block' : 'none';
+            if (btn) btn.classList.toggle('active', t === tab);
+        });
 
         if (tab === 'escenarios') {
-            if (viewEsc) viewEsc.style.display = 'block';
-            if (viewRes) viewRes.style.display = 'none';
-            if (btnEsc) btnEsc.classList.add('active');
-            if (btnRes) btnRes.classList.remove('active');
             this.cargarTablaAdmin();
-        } else {
-            if (viewEsc) viewEsc.style.display = 'none';
-            if (viewRes) viewRes.style.display = 'block';
-            if (btnEsc) btnEsc.classList.remove('active');
-            if (btnRes) btnRes.classList.add('active');
+        } else if (tab === 'reservas') {
             this.cargarReservasGlobalesAdmin();
+        } else if (tab === 'reportes') {
+            this.iniciarReportes();
+        }
+    },
+
+    // -------------------------------------------------------------
+    // ENTREGA 3: ESTADÍSTICAS, GRÁFICOS Y REPORTE FILTRABLE (CSV)
+    // -------------------------------------------------------------
+    charts: {},
+
+    formatoCOP(valor) {
+        return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(valor || 0);
+    },
+
+    async mensajeDeError(res) {
+        try {
+            const data = await res.json();
+            return data.message || `Error ${res.status}`;
+        } catch (e) {
+            return res.status === 403 ? 'Acceso restringido a administradores.' : `Error ${res.status}`;
+        }
+    },
+
+    async iniciarReportes() {
+        if (!this.token) return;
+        await this.poblarFiltrosReporte();
+        await this.aplicarFiltrosReporte();
+    },
+
+    async poblarFiltrosReporte() {
+        try {
+            const [resEsc, resUsr] = await Promise.all([
+                fetch(`${API_BASE}/escenarios`),
+                fetch(`${API_BASE}/reportes/usuarios`, { headers: { 'Authorization': `Bearer ${this.token}` } })
+            ]);
+            const llenar = (selectId, items, etiqueta) => {
+                const select = document.getElementById(selectId);
+                if (!select) return;
+                const seleccionado = select.value;
+                while (select.options.length > 1) select.remove(1);   // conserva "Todos"; se recarga por si hay datos nuevos
+                items.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.id;
+                    opt.textContent = etiqueta(item);   // textContent: nunca interpreta HTML
+                    select.appendChild(opt);
+                });
+                select.value = seleccionado;
+            };
+            if (resEsc.ok) llenar('rep-escenario', await resEsc.json(), e => e.nombre);
+            if (resUsr.ok) llenar('rep-usuario', await resUsr.json(), u => `${u.nombre} (${u.email})`);
+        } catch (err) {
+            console.error('Error cargando filtros del reporte:', err);
+        }
+    },
+
+    leerFiltrosReporte() {
+        const val = id => (document.getElementById(id) || {}).value || '';
+        return {
+            escenarioId: val('rep-escenario'),
+            usuarioId: val('rep-usuario'),
+            desde: val('rep-desde'),
+            hasta: val('rep-hasta'),
+            estado: val('rep-estado')
+        };
+    },
+
+    construirQuery(filtros, claves) {
+        const params = new URLSearchParams();
+        claves.forEach(k => { if (filtros[k]) params.set(k, filtros[k]); });
+        return params.toString();
+    },
+
+    limpiarFiltrosReporte() {
+        ['rep-escenario', 'rep-usuario', 'rep-desde', 'rep-hasta', 'rep-estado'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+        this.aplicarFiltrosReporte();
+    },
+
+    async aplicarFiltrosReporte() {
+        if (!this.token) return;
+        const f = this.leerFiltrosReporte();
+        if (f.desde && f.hasta && f.desde > f.hasta) {
+            this.showToast('La fecha inicial no puede ser posterior a la fecha final.', 'warning');
+            return;
+        }
+
+        // Los gráficos dependen de escenario y rango de fechas; la tabla y el CSV usan todos los filtros.
+        const qsStats = this.construirQuery(f, ['escenarioId', 'desde', 'hasta']);
+        const qsTabla = this.construirQuery(f, ['escenarioId', 'usuarioId', 'desde', 'hasta', 'estado']);
+        const headers = { 'Authorization': `Bearer ${this.token}` };
+
+        try {
+            const [resStats, resTabla] = await Promise.all([
+                fetch(`${API_BASE}/reportes/estadisticas?${qsStats}`, { headers }),
+                fetch(`${API_BASE}/reportes/reservas?${qsTabla}`, { headers })
+            ]);
+            if (!resStats.ok) throw new Error(await this.mensajeDeError(resStats));
+            if (!resTabla.ok) throw new Error(await this.mensajeDeError(resTabla));
+
+            this.renderEstadisticas(await resStats.json());
+            this.renderTablaReporte(await resTabla.json());
+        } catch (err) {
+            this.showToast(err.message, 'error');
+        }
+    },
+
+    renderEstadisticas(s) {
+        const set = (id, texto) => { const el = document.getElementById(id); if (el) el.textContent = texto; };
+        set('rep-kpi-vigentes', s.totalVigentes);
+        set('rep-kpi-canceladas', s.totalCanceladas);
+        set('rep-kpi-ocupacion', `${s.ocupacionGlobalPct.toFixed(1)}%`);
+        set('rep-kpi-ingresos', this.formatoCOP(s.ingresos));
+        set('rep-kpi-dia', s.diaPico || '-');
+        set('rep-kpi-hora', s.horaPico || '-');
+        set('rep-rango', `Rango analizado en los gráficos: ${s.desde} a ${s.hasta} (${s.diasRango} ${s.diasRango === 1 ? 'día' : 'días'}). La tabla y el CSV aplican además los filtros de usuario y estado.`);
+
+        if (typeof Chart === 'undefined') {
+            console.error('Chart.js no está disponible; se omiten los gráficos.');
+            return;
+        }
+        Chart.defaults.color = '#94A3B8';
+        Chart.defaults.borderColor = 'rgba(148, 163, 184, 0.14)';
+        Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
+
+        const AZUL = '#2563EB';
+        const AZUL_PICO = '#60A5FA';
+        const sufijoPct = v => `${v}%`;
+
+        // 1) Ocupación por escenario (barras horizontales)
+        this.dibujarGrafico('chart-escenarios', {
+            type: 'bar',
+            data: {
+                labels: s.porEscenario.map(e => e.escenarioNombre),
+                datasets: [{ label: 'Ocupación (%)', data: s.porEscenario.map(e => e.ocupacionPct), backgroundColor: AZUL, borderRadius: 4 }]
+            },
+            options: {
+                indexAxis: 'y',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => `${ctx.parsed.x}% de ocupación`,
+                            afterLabel: ctx => {
+                                const e = s.porEscenario[ctx.dataIndex];
+                                return `${e.reservas} reservas de ${e.franjasPosibles} franjas · ${this.formatoCOP(e.ingresos)}`;
+                            }
+                        }
+                    }
+                },
+                scales: { x: { beginAtZero: true, ticks: { callback: sufijoPct } } }
+            }
+        });
+
+        // 2) Demanda por día de la semana; el día pico se resalta
+        const maxDia = Math.max(0, ...s.porDiaSemana.map(d => d.reservas));
+        this.dibujarGrafico('chart-dias', {
+            type: 'bar',
+            data: {
+                labels: s.porDiaSemana.map(d => d.dia),
+                datasets: [{
+                    label: 'Reservas',
+                    data: s.porDiaSemana.map(d => d.reservas),
+                    backgroundColor: s.porDiaSemana.map(d => (maxDia > 0 && d.reservas === maxDia) ? AZUL_PICO : AZUL),
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+            }
+        });
+
+        // 3) Ocupación por franja horaria; el tooltip muestra también el número de reservas
+        const maxFranja = Math.max(0, ...s.porFranja.map(f => f.reservas));
+        this.dibujarGrafico('chart-franjas', {
+            type: 'bar',
+            data: {
+                labels: s.porFranja.map(f => f.horaInicio),
+                datasets: [{
+                    label: 'Ocupación (%)',
+                    data: s.porFranja.map(f => f.ocupacionPct),
+                    backgroundColor: s.porFranja.map(f => (maxFranja > 0 && f.reservas === maxFranja) ? AZUL_PICO : AZUL),
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: items => { const f = s.porFranja[items[0].dataIndex]; return `${f.horaInicio} - ${f.horaFin}`; },
+                            label: ctx => `${ctx.parsed.y}% de ocupación`,
+                            afterLabel: ctx => { const f = s.porFranja[ctx.dataIndex]; return `${f.reservas} reservas de ${f.franjasPosibles} franjas`; }
+                        }
+                    }
+                },
+                scales: { y: { beginAtZero: true, ticks: { callback: sufijoPct } } }
+            }
+        });
+    },
+
+    dibujarGrafico(canvasId, config) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        if (this.charts[canvasId]) this.charts[canvasId].destroy();   // evita acumular instancias al refiltrar
+        config.options = Object.assign({ responsive: true, maintainAspectRatio: false }, config.options);
+        this.charts[canvasId] = new Chart(canvas, config);
+    },
+
+    renderTablaReporte(reservas) {
+        const LIMITE = 200;
+        const tbody = document.getElementById('rep-tbody');
+        const conteo = document.getElementById('rep-conteo');
+        if (!tbody) return;
+
+        if (conteo) {
+            conteo.textContent = reservas.length > LIMITE
+                ? `${reservas.length} reservas (se muestran las ${LIMITE} más recientes; el CSV incluye todas)`
+                : `${reservas.length} ${reservas.length === 1 ? 'reserva' : 'reservas'}`;
+        }
+
+        if (reservas.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:24px; color:var(--text-muted);">No hay reservas que coincidan con los filtros.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = reservas.slice(0, LIMITE).map(r => `
+            <tr>
+                <td><code style="color:var(--accent); font-weight:700;">${escapeHtml(r.codigoReserva)}</code></td>
+                <td>
+                    <b>${escapeHtml(r.usuarioNombre)}</b>
+                    <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(r.usuarioEmail)}</div>
+                </td>
+                <td>${escapeHtml(r.escenarioNombre)}</td>
+                <td>${escapeHtml(r.fecha)}</td>
+                <td><b>${escapeHtml(r.horaInicio)} - ${escapeHtml(r.horaFin)}</b></td>
+                <td style="font-weight:700;">${this.formatoCOP(r.precioTotal)}</td>
+                <td>
+                    <span class="badge ${r.estado === 'CANCELADA' ? 'badge-mantenimiento' : 'badge-primary'}" style="position:static;">${escapeHtml(r.estado)}</span>
+                </td>
+            </tr>
+        `).join('');
+    },
+
+    async descargarReporteCsv() {
+        if (!this.token) return;
+        const f = this.leerFiltrosReporte();
+        if (f.desde && f.hasta && f.desde > f.hasta) {
+            this.showToast('La fecha inicial no puede ser posterior a la fecha final.', 'warning');
+            return;
+        }
+        const params = new URLSearchParams(this.construirQuery(f, ['escenarioId', 'usuarioId', 'desde', 'hasta', 'estado']));
+        params.set('separador', (document.getElementById('rep-separador') || {}).value || ';');
+
+        const boton = document.getElementById('btn-descargar-csv');
+        if (boton) boton.disabled = true;
+        try {
+            // fetch con cabecera Authorization: un enlace directo no podría enviar el token JWT
+            const res = await fetch(`${API_BASE}/reportes/reservas/csv?${params.toString()}`, {
+                headers: { 'Authorization': `Bearer ${this.token}` }
+            });
+            if (!res.ok) throw new Error(await this.mensajeDeError(res));
+
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const enlace = document.createElement('a');
+            enlace.href = url;
+            enlace.download = `reporte_reservas_${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(enlace);
+            enlace.click();
+            enlace.remove();
+            URL.revokeObjectURL(url);
+            this.showToast('Reporte CSV descargado correctamente.', 'info');
+        } catch (err) {
+            this.showToast(err.message, 'error');
+        } finally {
+            if (boton) boton.disabled = false;
         }
     },
 
@@ -1232,8 +1505,30 @@ const app = {
         }
     },
     // -------------------------------------------------------------
-    // UTILIDADES
+    // UTILIDADES Y MODAL QR
     // -------------------------------------------------------------
+    abrirModalQr() {
+        const urlActual = window.location.origin;
+        const qrImg = document.getElementById('qr-image');
+        const qrUrlText = document.getElementById('qr-url-text');
+        if (qrImg && qrUrlText) {
+            qrUrlText.textContent = urlActual;
+            qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=10&data=${encodeURIComponent(urlActual)}`;
+        }
+        const modal = document.getElementById('modal-qr');
+        if (modal) modal.style.display = 'flex';
+    },
+
+    async copiarUrlPublica() {
+        const urlActual = window.location.origin;
+        try {
+            await navigator.clipboard.writeText(urlActual);
+            this.showToast('Enlace copiado al portapapeles', 'success');
+        } catch (e) {
+            this.showToast(urlActual, 'info');
+        }
+    },
+
     closeModal(modalId) {
         document.getElementById(modalId).style.display = 'none';
     },
