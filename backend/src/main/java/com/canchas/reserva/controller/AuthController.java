@@ -42,4 +42,15 @@ public class AuthController {
         UsuarioDto perfil = authService.obtenerPerfil(userDetails.getUsername());
         return ResponseEntity.ok(perfil);
     }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/public-url")
+    @Operation(summary = "Obtener el enlace público activo de Cloudflare para sincronizar diapositivas y móviles")
+    public ResponseEntity<java.util.Map<String, String>> obtenerPublicUrl() {
+        String url = com.canchas.reserva.config.PublicTunnelManager.getPublicUrl();
+        java.util.Map<String, String> response = new java.util.HashMap<>();
+        response.put("publicUrl", url != null ? url : "http://localhost:8080");
+        response.put("status", url != null ? "ONLINE" : "OFFLINE");
+        return ResponseEntity.ok(response);
+    }
 }

@@ -79,6 +79,7 @@ public class PublicTunnelManager {
                             publicUrl = matcher.group();
                             printBanner(publicUrl);
                             saveUrlFile(publicUrl);
+                            updatePresentationFiles(publicUrl);
                         }
                     }
                 } catch (IOException ignored) {}
@@ -109,6 +110,33 @@ public class PublicTunnelManager {
         try {
             Files.writeString(Paths.get("..", "URL_PUBLICA_ACTIVA.txt"), "ENLACE PÚBLICO OFICIAL:\n" + url + "\n\n(Abre este enlace en tu celular o compártelo)");
         } catch (Exception ignored) {}
+    }
+
+    private void updatePresentationFiles(String url) {
+        Path[] possiblePaths = new Path[]{
+            Paths.get("Presentacion_Interactiva_Grupo_4.html"),
+            Paths.get("..", "Presentacion_Interactiva_Grupo_4.html"),
+            Paths.get(System.getProperty("user.home"), "Downloads", "Presentacion_Interactiva_Grupo_4.html"),
+            Paths.get("src", "main", "resources", "static", "presentacion.html")
+        };
+
+        for (Path p : possiblePaths) {
+            try {
+                if (Files.exists(p)) {
+                    String content = Files.readString(p);
+                    String updated = content.replaceAll("const DEFAULT_LIVE_URL = '[^']+';", "const DEFAULT_LIVE_URL = '" + url + "';");
+                    updated = updated.replaceAll("let currentLiveUrl = '[^']+';", "let currentLiveUrl = '" + url + "';");
+                    updated = updated.replaceAll("id=\"tunnelUrlInput\" class=\"qr-input\" value=\"[^\"]+\"", "id=\"tunnelUrlInput\" class=\"qr-input\" value=\"" + url + "\"");
+                    updated = updated.replaceAll("id=\"tunnelDirectLink\" href=\"[^\"]+\"[^>]*>[^<]+</a>", "id=\"tunnelDirectLink\" href=\"" + url + "\" target=\"_blank\" style=\"color: var(--accent); font-weight: 700; font-size: 12px; text-decoration: underline; font-family: monospace;\">" + url + "</a>");
+                    if (!content.equals(updated)) {
+                        Files.writeString(p, updated);
+                        log.info("Archivo de diapositivas sincronizado automáticamente con nuevo túnel en: {}", p.toAbsolutePath());
+                    }
+                }
+            } catch (Exception e) {
+                log.warn("No se pudo actualizar diapositivas en {}: {}", p, e.getMessage());
+            }
+        }
     }
 
     public static String getPublicUrl() {
