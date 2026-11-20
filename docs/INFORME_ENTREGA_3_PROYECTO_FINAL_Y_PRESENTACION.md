@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="../backend/src/main/resources/static/logo-javeriana.png" width="130" alt="Pontificia Universidad Javeriana">
+</div>
+
 # Pontificia Universidad Javeriana
 ### Facultad de Ingeniería — Departamento de Ingeniería de Sistemas
 ### Asignatura: Desarrollo de Software (Periodo Académico 2026-3)
@@ -13,7 +17,7 @@
 - **Nicolás Espinosa Soler** — Arquitectura Backend, Persistencia MySQL 8.4 y Concurrencia
 - **Gustavo Mejía** — Coordinación de Calidad (QA), Pruebas de Usuario (UAT) y Aceptación
 
-**Docente:** Docente de la Asignatura Desarrollo de Software  
+**Docente:** Prof. Santiago Peña Arismendi  
 **Repositorio Oficial:** `https://github.com/nicolascardozo0709/proyecto-canchas-grupo-4`  
 **Fecha de Entrega y Sustentación:** 20 de noviembre de 2026  
 **Bogotá D.C., Colombia**
@@ -217,14 +221,6 @@ La depuración de errores tuvo un efecto directo en la confiabilidad: la migraci
 
 - American Psychological Association. (2020). *Publication manual of the American Psychological Association* (7th ed.). https://doi.org/10.1037/0000165-000
 - Anthropic. (2026). *Claude Opus 5.5* [Modelo de lenguaje de gran tamaño]. https://www.anthropic.com/claude
-- Beck, K. (2003). *Test-driven development: By example*. Addison-Wesley.
-- Fielding, R. T. (2000). *Architectural styles and the design of network-based software architectures* [Tesis doctoral, University of California, Irvine].
 - Google. (2026). *Google Antigravity* [Plataforma de desarrollo agéntico]. https://antigravity.google
 - Google DeepMind. (2026). *Gemini 4 Neon* [Modelo de lenguaje de gran tamaño]. https://deepmind.google/technologies/gemini/
-- IEEE Computer Society. (1998). *IEEE recommended practice for software requirements specifications* (IEEE Std 830-1998). IEEE.
-- International Organization for Standardization. (2011). *Systems and software engineering: Systems and software quality requirements and evaluation (SQuaRE)* (ISO/IEC 25010:2011).
-- Martin, R. C. (2018). *Clean architecture: A craftsman's guide to software structure and design*. Prentice Hall.
-- OWASP Foundation. (2023). *CSV injection*. https://owasp.org/www-community/attacks/CSV_Injection
 - Pressman, R. S., & Maxim, B. R. (2020). *Software engineering: A practitioner's approach* (9th ed.). McGraw-Hill Education.
-- Schwaber, K., & Sutherland, J. (2020). *The Scrum guide*. Scrum.org.
-- Walls, C. (2022). *Spring in action* (6th ed.). Manning.
