@@ -843,12 +843,12 @@
   </section>
 
   <!-- =================================================================== -->
-  <!-- SLIDE 07: DECISIONES TÉCNICAS Y MÉTRICAS ADMIN REAL (NICOLÁS CARDOZO)-->
+  <!-- SLIDE 07: DECISIONES TÉCNICAS Y MÉTRICAS ADMIN REAL (NICOLÁS ESPINOSA)-->
   <!-- =================================================================== -->
   <section class="slide">
     <div class="header-meta">
       <span>07 / 08 · ARQUITECTURA, CONFIABILIDAD Y MÉTRICAS</span>
-      <span class="speaker">NICOLÁS CARDOZO</span>
+      <span class="speaker">NICOLÁS ESPINOSA</span>
     </div>
 
     <div class="slide-header">
@@ -929,14 +929,12 @@
           <div style="font-size: 14px; font-weight: 600; color: #ffffff; margin-top: 8px;">Escanea para abrir la app</div>
 
           <div class="qr-input-row">
-            <input type="text" id="tunnelUrlInput" class="qr-input" value="https://sleeve-submissions-looks-supervision.trycloudflare.com" placeholder="https://*.trycloudflare.com">
+            <input type="text" id="tunnelUrlInput" class="qr-input" value="https://legislature-institutes-rid-commentary.trycloudflare.com" placeholder="https://*.trycloudflare.com">
             <button class="qr-btn" id="btnCopiar" onclick="copiarEnlace()">Copiar</button>
             <button class="qr-btn" onclick="actualizarQR()">Sync</button>
           </div>
 
-          <a id="tunnelDirectLink" href="https://sleeve-submissions-looks-supervision.trycloudflare.com" target="_blank" style="font-size: 11px; color: var(--accent); text-decoration: none; margin-top: 8px; word-break: break-all;">
-            https://sleeve-submissions-looks-supervision.trycloudflare.com
-          </a>
+          <a id="tunnelDirectLink" href="https://legislature-institutes-rid-commentary.trycloudflare.com" target="_blank" style="color: var(--accent); font-weight: 700; font-size: 12px; text-decoration: underline; font-family: monospace;">https://legislature-institutes-rid-commentary.trycloudflare.com</a>
           <div id="syncToast" style="display: none; font-size: 11px; color: var(--emerald); margin-top: 4px;"></div>
         </div>
 
@@ -1002,7 +1000,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     });
 
     // === MOTOR DINÁMICO DE SINCRONIZACIÓN DE TÚNEL Y QR EN TIEMPO REAL ===
-    let currentLiveUrl = 'https://sleeve-submissions-looks-supervision.trycloudflare.com';
+    let currentLiveUrl = 'https://legislature-institutes-rid-commentary.trycloudflare.com';
 
     function renderQR(url) {
       const container = document.getElementById('qrCodeContainer');
